@@ -23,7 +23,7 @@ calc_resistance
 <p align="center"><img src="./doc/working_principle.png" width="800" /></p>
 
 ## See also
-- [Research Fechner](https://research.tudelft.nl/en/publications/?search=Uwe+Fec
+- [Research Fechner](https://research.tudelft.nl/en/publications/?search=Uwe+Fecner&pageSize=50&ordering=rating&descending=true)
 - The application [KiteViewer](https://github.com/ufechner7/KiteViewer)
 - the package [KiteUtils](https://github.com/ufechner7/KiteUtils.jl)
 - the package [KitePodModels](https://github.com/aenarete/KitePodModels.jl)
