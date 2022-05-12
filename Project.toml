@@ -11,6 +11,7 @@ TestEnv = "1e6cf692-eddd-4d53-88a5-2d735e33781b"
 [compat]
 julia = "1"
 TestEnv = "1"
+Parameters = "0.12"
 KiteUtils = "0.4"
 
 [extras]
