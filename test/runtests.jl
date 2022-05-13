@@ -2,6 +2,7 @@ using WinchModels
 using Test
 
 cd("..")
+KiteUtils.set_data_path("") 
 
 @testset "WinchModels.jl" begin
     wm = AsyncGenerator()
