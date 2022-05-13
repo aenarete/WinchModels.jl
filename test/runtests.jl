@@ -5,7 +5,7 @@ cd("..")
 KiteUtils.set_data_path("") 
 
 @testset "WinchModels.jl" begin
-    wm = AsyncGenerator()
+    wm = deepcopy(AsyncGenerator())
     @test calc_reactance(wm)  ≈ 0.4676729273591048
     @test calc_inductance(wm) ≈ 0.002977298325578337
     @test calc_resistance(wm) ≈ 0.07268793534211404
@@ -22,5 +22,14 @@ KiteUtils.set_data_path("")
     @test calc_acceleration(wm, set_speed, speed, force, true) ≈ -2.5
     set_speed = -0.11
     speed = -0.1
-    @test calc_acceleration(wm, set_speed, speed, force, true) ≈ 2.5    
+    @test calc_acceleration(wm, set_speed, speed, force, true) ≈ 2.5
+    # compare results with Python
+    wm.inertia_total=4*wm.inertia_motor
+    @test wm.inertia_total ≈ 0.328
+    @test calc_viscous_friction(wm, 1.0) ≈ 0.0207626651925
+    @test calc_coulomb_friction(wm) ≈ 3.17790322581
+    @test calc_resistance(wm) ≈ 0.0726879353421
+    @test calc_inductance(wm) ≈ 0.00297729832558
+    @test (wm.omega_sn / (wm.gear_ratio/wm.drum_radius)) ≈ 4.09167107705
+    @test calc_acceleration(wm, 7.9, 8, 0) ≈ -3.13208622374
 end
