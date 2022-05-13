@@ -1,3 +1,5 @@
+# using TestEnv; TestEnv.activate()
+
 using Plots, WinchModels
 
 wm = deepcopy(AsyncGenerator())

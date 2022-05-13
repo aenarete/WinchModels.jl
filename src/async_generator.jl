@@ -39,7 +39,7 @@ const AWM = AbstractWinchModel
 
 Model of a winch with an async generator and a gearbox.
 """
-@with_kw mutable struct AsyncGenerator <: AbstractWinchModel
+@with_kw mutable struct AsyncGenerator <: AbstractWinchModel @deftype Float64
     set::Settings = se()
     "maximal nominal winch force [N]"
     max_winch_force = 4000
@@ -107,9 +107,9 @@ end
 
 function calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brake = false)
     if use_brake
-        if abs(set_speed) < 0.9wm.v_min
+        if abs(set_speed) < 0.9 * wm.v_min
             wm.brake = true
-        elseif abs(set_speed) > 1.1wm.v_min
+        elseif abs(set_speed) > 1.1 * wm.v_min
             wm.brake = false
         end
         if wm.brake
