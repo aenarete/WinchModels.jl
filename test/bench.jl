@@ -1,3 +1,8 @@
+using Pkg
+if ! ("BenchmarkTools" ∈ keys(Pkg.project().dependencies))
+    using TestEnv; TestEnv.activate()
+end
+
 using WinchModels, BenchmarkTools
 
 wm = deepcopy(AsyncGenerator())

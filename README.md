@@ -25,12 +25,24 @@ calc_coulomb_friction
 calc_viscous_friction
 smooth_sign
 ```
+Plot of function "smooth_sign"
+<p align="center"><img src="./doc/smooth_sign.png" width="400" /></p>
+
 ## Main functions
 ```julia
 calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brake = false)
 calc_force(wm::AsyncGenerator, set_speed, speed)
 ```
 <p align="center"><img src="./doc/working_principle.png" width="800" /></p>
+
+## Performance
+```julia
+using WinchModels, BenchmarkTools
+
+wm = AsyncGenerator()
+@benchmark calc_acceleration(wm, 7.9, 8.0, 100.0)
+```
+On i7-7700K 17ns for Julia, 1050ns with Python.
 
 ## See also
 - [Research Fechner](https://research.tudelft.nl/en/publications/?search=Uwe+Fecner&pageSize=50&ordering=rating&descending=true)
