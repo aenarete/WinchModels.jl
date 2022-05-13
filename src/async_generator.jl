@@ -66,7 +66,7 @@ Model of a winch with an async generator and a gearbox.
     "linear acceleration of the brake [m/s²]"
     brake_acc = -25.0
     "if the brake of the winch is activated"
-    brake = true;
+    brake::Bool = true;
     "coulomb friction [N]"
     f_coulomb = 122.0
     "coefficient for the viscous friction [Ns/m]"
