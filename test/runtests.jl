@@ -9,4 +9,6 @@ cd("..")
     @test calc_inductance(wm) ≈ 0.002977298325578337
     @test calc_resistance(wm) ≈ 0.07268793534211404
     @test calc_coulomb_friction(wm) ≈ 3.1779032258064515
+    omega = 1.5
+    @test calc_viscous_friction(wm, omega) ≈ 0.03114399778876171
 end
