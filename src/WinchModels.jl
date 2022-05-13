@@ -23,9 +23,9 @@ SOFTWARE. =#
 module WinchModels
 using KiteUtils, Parameters
 
-export AsyncGenerator                                   # types
-export calc_reactance, calc_inductance, calc_resistance # functions
-export calc_coulomb_friction, calc_viscous_friction     # functions
+export AsyncGenerator                                                      # types
+export calc_reactance, calc_inductance, calc_resistance                    # functions
+export calc_coulomb_friction, calc_viscous_friction, calc_acceleration     # functions
 
 include("async_generator.jl")
 

@@ -105,25 +105,34 @@ function smooth_sign(x)
     x / sqrt(x * x + EPSILON * EPSILON)
 end
 
-# def calcAcceleration(set_speed, speed, force, useBrake = False):
-#     if useBrake:
-#         global brake
-#         if abs(set_speed) < 0.9 * v_min:
-#             brake = True
-#         if abs(set_speed) > 1.1 * v_min:
-#             brake = False
-#         if brake:
-#             return brake_acc * speed # if the brake is active the acceleration proportional to the speed
-#     omega      = gear_ratio/drum_radius * speed
-#     omega_sync = gear_ratio/drum_radius * set_speed
-#     delta = omega_sync - omega
-#     if abs(omega_sync) <= omega_sn:
-#         omega_dot_m = (u_nom**2 * R2 * delta) / (omega_sn**2 * (R2**2 + L**2 * delta**2))
-#     else:
-#         omega_dot_m = (u_nom**2 * R2 * delta) / (omega_sync**2 * (R2**2 + L**2 * delta**2))
-#     omega_dot_m += drum_radius / gear_ratio * force * 4000.0 / max_winch_force - C_F * omega - TAU_STATIC * smoth_sign(omega)
-#     omega_dot_m *= 1/inertia_total
-#     return drum_radius/gear_ratio * omega_dot_m
+function calc_acceleration(wm, set_speed, speed, force, use_brake = False)
+    if use_brake
+        if abs(set_speed) < 0.9wm.v_min
+            wm.brake = true
+        elseif abs(set_speed) > 1.1wm.v_min
+            wm.brake = false
+        end
+        if wm.brake
+            # if the brake is active the acceleration proportional to the speed
+            # TODO: check if this is physically correct
+            return wm.brake_acc * speed
+        end
+    end
+    omega      = wm.gear_ratio/wm.drum_radius * speed
+    omega_sync = wm.gear_ratio/wm.drum_radius * set_speed
+    delta = omega_sync - omega
+    R2 = calc_resistance(wm)
+    L  = calc_inductance(wm)
+    if abs(omega_sync) <= wm.omega_sn
+        omega_dot_m = (wm.u_nom^2 * R2 * delta) / (wm.omega_sn^2 * (R2^2 + L^2 * delta^2))
+    else
+        omega_dot_m = (wm.u_nom^2 * R2 * delta) / (omega_sync^2 * (R2^2 + L^2 * delta^2))
+    end
+    τ = calc_coulomb_friction(wm) * smooth_sign(omega) + calc_viscous_friction(wm, omega)
+    omega_dot_m += wm.drum_radius / wm.gear_ratio * force * 4000.0 / wm.max_winch_force - τ
+    omega_dot_m *= 1/wm.inertia_total
+    wm.drum_radius/wm.gear_ratio * omega_dot_m
+end
 
 # def calcForce(set_speed, speed):
 #     """ Calculate the thether force as function of the synchronous tether speed and the speed. """

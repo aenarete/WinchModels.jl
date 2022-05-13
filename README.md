@@ -21,6 +21,7 @@ calc_inductance
 calc_resistance
 calc_coulomb_friction
 calc_viscous_friction
+calc_acceleration
 ```
 <p align="center"><img src="./doc/working_principle.png" width="800" /></p>
 
