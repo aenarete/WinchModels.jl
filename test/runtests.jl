@@ -1,4 +1,4 @@
-using WinchModels
+using WinchModels, KiteUtils
 using Test
 
 cd("..")
