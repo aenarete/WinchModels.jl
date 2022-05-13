@@ -105,7 +105,7 @@ function smooth_sign(x)
     x / sqrt(x * x + EPSILON * EPSILON)
 end
 
-function calc_acceleration(wm, set_speed, speed, force, use_brake = False)
+function calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brake = false)
     if use_brake
         if abs(set_speed) < 0.9wm.v_min
             wm.brake = true
@@ -134,10 +134,11 @@ function calc_acceleration(wm, set_speed, speed, force, use_brake = False)
     wm.drum_radius/wm.gear_ratio * omega_dot_m
 end
 
-# def calcForce(set_speed, speed):
-#     """ Calculate the thether force as function of the synchronous tether speed and the speed. """
-#     acc = calcAcceleration(set_speed, speed, 0.0)
-#     return (gear_ratio/drum_radius) ** 2 * inertia_total * acc
+""" Calculate the tether force as function of the synchronous tether speed and the speed. """
+function calc_force(wm::AsyncGenerator, set_speed, speed)
+    acc = calc_acceleration(wm, set_speed, speed, 0.0)
+    (wm.gear_ratio/wm.drum_radius) ^ 2 * wm.inertia_total * acc
+end
 
 # if __name__ == "__main__":
 #     if True:

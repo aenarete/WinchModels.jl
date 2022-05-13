@@ -16,14 +16,18 @@ Currently implemented is a model of the 20kW ground station from Delft Universit
 AsyncGenerator
 ```
 
-## Exported functions
+## Helper functions
 ```julia
 calc_reactance
 calc_inductance
 calc_resistance
 calc_coulomb_friction
 calc_viscous_friction
-calc_acceleration
+```
+## Main functions
+```julia
+calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brake = false)
+calc_force(wm::AsyncGenerator, set_speed, speed)
 ```
 <p align="center"><img src="./doc/working_principle.png" width="800" /></p>
 

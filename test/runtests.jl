@@ -16,6 +16,7 @@ KiteUtils.set_data_path("")
     speed = 49.0
     force = 1000.0
     @test calc_acceleration(wm, set_speed, speed, force, false) ≈ -1.7857125353931111
+    @test calc_force(wm, set_speed, speed) ≈ -1536.8834794369461
     set_speed = 0.11
     speed = 0.1
     @test calc_acceleration(wm, set_speed, speed, force, true) ≈ -2.5
