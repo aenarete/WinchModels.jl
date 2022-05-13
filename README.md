@@ -19,6 +19,7 @@ AsyncGenerator
 calc_reactance
 calc_inductance
 calc_resistance
+calc_coulomb_friction
 ```
 <p align="center"><img src="./doc/working_principle.png" width="800" /></p>
 

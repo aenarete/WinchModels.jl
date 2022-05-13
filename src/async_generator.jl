@@ -88,9 +88,18 @@ function calc_resistance(wm::AsyncGenerator)
     (wm.u_nom^2 * (wm.omega_sn - wm.omega_mn))/(2wm.omega_sn^2) * (1 / wm.tau_n + sqrt(1 / wm.tau_n^2 - 1 / wm.tau_b^2))
 end
 
-# TAU_STATIC = f_coulomb * drum_radius / gear_ratio    # Coulomb friction torque [Nm]
-# C_F = c_vf * drum_radius^2 / gear_ratio^2     # Coefficient for the viscous friction torque [Nms/rad]
+# coulomb friction torque TAU_STATIC [Nm]
+function calc_coulomb_friction(wm::AsyncGenerator)
+    wm.f_coulomb * wm.drum_radius / wm.gear_ratio
+end
 
+# viscous friction torque C_F [Nm]
+# omega in rad/s
+function calc_viscous_friction(wm::AsyncGenerator, omega)
+    wm.c_vf * omega * wm.drum_radius^2 / wm.gear_ratio^2     
+end
+
+# differentiable version of the sign function
 function smooth_sign(x)
     EPSILON = 6
     x / sqrt(x * x + EPSILON * EPSILON)

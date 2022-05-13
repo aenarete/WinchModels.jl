@@ -25,6 +25,7 @@ using KiteUtils, Parameters
 
 export AsyncGenerator                                   # types
 export calc_reactance, calc_inductance, calc_resistance # functions
+export calc_coulomb_friction, calc_viscous_friction     # functions
 
 include("async_generator.jl")
 
