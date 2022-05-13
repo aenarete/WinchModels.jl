@@ -23,6 +23,7 @@ calc_inductance
 calc_resistance
 calc_coulomb_friction
 calc_viscous_friction
+smooth_sign
 ```
 ## Main functions
 ```julia
