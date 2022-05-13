@@ -29,10 +29,8 @@ calc_acceleration
 - [Research Fechner](https://research.tudelft.nl/en/publications/?search=Uwe+Fecner&pageSize=50&ordering=rating&descending=true)
 - The application [KiteViewer](https://github.com/ufechner7/KiteViewer)
 - the package [KiteUtils](https://github.com/ufechner7/KiteUtils.jl)
-- the package [KitePodModels](https://github.com/aenarete/KitePodModels.jl)
-- the package [KiteModels](https://github.com/ufechner7/KiteModels.jl)
-- the package [KiteControllers](https://github.com/aenarete/KiteControllers.jl)
-- the package [KiteViewers](https://github.com/aenarete/KiteViewers.jl)
+- the packages [KiteModels](https://github.com/ufechner7/KiteModels.jl) and [KitePodModels](https://github.com/aenarete/KitePodModels.jl) 
+- the package [KiteControllers](https://github.com/aenarete/KiteControllers.jl) and [KiteViewers](https://github.com/aenarete/KiteViewers.jl)
 
 
 
