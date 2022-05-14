@@ -16,6 +16,16 @@ Currently implemented is a model of the 20kW ground station from Delft Universit
 AsyncGenerator
 ```
 
+## Main functions
+```julia
+calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brake = false)
+calc_force(wm::AsyncGenerator, set_speed, speed)
+```
+<p align="center"><img src="./docs/working_principle.png" width="800" /></p>
+
+### Plot of function "calc_force"
+<p align="center"><img src="./docs/tether_force.png" width="600" /></p>
+
 ## Helper functions
 ```julia
 calc_reactance
@@ -25,15 +35,8 @@ calc_coulomb_friction
 calc_viscous_friction
 smooth_sign
 ```
-Plot of function "smooth_sign"
-<p align="center"><img src="./doc/smooth_sign.png" width="400" /></p>
-
-## Main functions
-```julia
-calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brake = false)
-calc_force(wm::AsyncGenerator, set_speed, speed)
-```
-<p align="center"><img src="./doc/working_principle.png" width="800" /></p>
+### Plot of function "smooth_sign"
+<p align="center"><img src="./docs/smooth_sign.png" width="400" /></p>
 
 ## Performance
 ```julia

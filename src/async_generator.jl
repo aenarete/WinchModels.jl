@@ -118,6 +118,12 @@ function calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brak
             return wm.brake_acc * speed
         end
     end
+    # limit the acceleration
+    if set_speed > speed + 1  
+        set_speed = speed + 1
+    elseif set_speed < speed - 1
+        set_speed = speed - 1
+    end
     omega      = wm.gear_ratio/wm.drum_radius * speed
     omega_sync = wm.gear_ratio/wm.drum_radius * set_speed
     delta = omega_sync - omega
@@ -139,64 +145,3 @@ function calc_force(wm::AsyncGenerator, set_speed, speed)
     acc = calc_acceleration(wm, set_speed, speed, 0.0)
     (wm.gear_ratio/wm.drum_radius) ^ 2 * wm.inertia_total * acc
 end
-
-# if __name__ == "__main__":
-#     if True:
-#         print "Inertia, as seen from the generator: ", inertia_total
-#         print "C_F", C_F
-#         print "TAU_STATIC", TAU_STATIC
-#         print "R2, L", R2, L
-#         print "v_SN", (omega_sn / (gear_ratio/drum_radius))
-#     if False:
-#         print 'Acceleration at 4 m/s due to friction: ', calcAcceleration(7.9, 8., 0.0)
-#     if False:
-#         from pylab import np, plot
-#         n = 256
-#         X = gear_ratio/drum_radius * np.linspace(-8.0, 8.0, n, endpoint=True)
-#         SIGN = []
-#         for i in range(n):
-#             SIGN.append(smoth_sign(X[i]))
-#         plot(X, SIGN, label='smoth_sign')
-#     if False:
-#         with Timer() as t0:
-#             for i in range(10000):
-#                 pass
-#         with Timer() as t1:
-#             for i in range(10000):
-#                 calcAcceleration(7.9, 8., 100.0)
-#         print "time for calcAcceleration  [Âµs]:   ", (t1.secs - t0.secs)  / 10000 * 1e6
-#     if False:
-#         from pylab import np, plot, xlim, ylim, legend, grid, gca
-#         force = calcForce(4.0*1.025, 4.0)
-#         print "Force: ", force
-#         n = 256
-#         F2, F4, F6, F7, F8 = [], [], [], [], []
-#         V = np.linspace(0.0, 9.0, n, endpoint=True)
-#         for i in range(n):
-#             F2.append(-calcForce(0.15, V[i]))
-#             F4.append(-calcForce(1.0, V[i]))
-#             F6.append(-calcForce(6.0, V[i]))
-# #            F7.append(-calcForce(-7.3, -V[i]))
-#             F8.append(-calcForce(8.0, V[i]))
-#         plot(V, F2, label=u'$v_s$ = 0.15 m/s')
-#         plot(V, F4, label=u'$v_s$ = 1 m/s')
-#         plot(V, F6, label=u'$v_s$ = 6 m/s')
-# #        plot(V, F7, label=u'$v_s$ = 7.3 m/s')
-#         plot(V, F8, label=u'$v_s$ = 8 m/s')
-#         ylim(-15000.0, 15000)
-#         #xlim(0.0, 9.0)
-#         xlim(0.0, 0.4)
-#         legend(loc='upper right')
-#         gca().set_ylabel(u'Tether force [N]')
-#         gca().set_xlabel(u'Reel-out speed [m/s]')
-#         grid(True, color='0.25')
-#     if False:
-#         from pylab import np, plot
-#         X = np.linspace(-307., 307., num = 1000)
-#         Y = []
-#         print "omega_max: ", gear_ratio/drum_radius * 8.
-#         for x in X:
-#             Y.append(smoth_sign(x))
-#         plot(X, Y)
-#     if True:
-#         print "f_max: ", max_winch_force
