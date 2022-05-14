@@ -35,7 +35,7 @@ abstract type AbstractWinchModel end
 const AWM = AbstractWinchModel
 
 """
-    mutable struct AsyncGenerator
+    mutable struct AsyncMachine
 
 Model of a winch with an async generator and a gearbox.
 """
@@ -74,28 +74,28 @@ Model of a winch with an async generator and a gearbox.
 end
 
 # calculated the motor reactance X [Ohm]
-function calc_reactance(wm::AsyncGenerator)
+function calc_reactance(wm::AsyncMachine)
     wm.u_nom^2 / (2 * wm.omega_sn * wm.tau_b) 
 end
 
 # calculate the motor inductance L [H]
-function calc_inductance(wm::AsyncGenerator)
+function calc_inductance(wm::AsyncMachine)
     calc_reactance(wm) / wm.omega_sn
 end
 
 # calculate the motor resistance R2 [Ohm]
-function calc_resistance(wm::AsyncGenerator)
+function calc_resistance(wm::AsyncMachine)
     (wm.u_nom^2 * (wm.omega_sn - wm.omega_mn))/(2wm.omega_sn^2) * (1 / wm.tau_n + sqrt(1 / wm.tau_n^2 - 1 / wm.tau_b^2))
 end
 
 # coulomb friction torque TAU_STATIC [Nm]
-function calc_coulomb_friction(wm::AsyncGenerator)
+function calc_coulomb_friction(wm::AsyncMachine)
     wm.f_coulomb * wm.drum_radius / wm.gear_ratio
 end
 
 # viscous friction torque C_F [Nm]
 # omega in rad/s
-function calc_viscous_friction(wm::AsyncGenerator, omega)
+function calc_viscous_friction(wm::AsyncMachine, omega)
     wm.c_vf * omega * wm.drum_radius^2 / wm.gear_ratio^2     
 end
 
@@ -105,7 +105,7 @@ function smooth_sign(x)
     x / sqrt(x * x + EPSILON * EPSILON)
 end
 
-function calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brake = false)
+function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false)
     if use_brake
         if abs(set_speed) < 0.9 * wm.v_min
             wm.brake = true
@@ -141,7 +141,7 @@ function calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brak
 end
 
 """ Calculate the tether force as function of the synchronous tether speed and the speed. """
-function calc_force(wm::AsyncGenerator, set_speed, speed)
+function calc_force(wm::AsyncMachine, set_speed, speed)
     acc = calc_acceleration(wm, set_speed, speed, 0.0)
     (wm.gear_ratio/wm.drum_radius) ^ 2 * wm.inertia_total * acc
 end
