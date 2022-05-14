@@ -19,7 +19,7 @@ Currently implemented is a model of the 20kW ground station from Delft Universit
 ## Exported types
 ```julia
 AbstractWinchModel
-AsyncGenerator
+AsyncMachine
 ```
 
 ## Main functions

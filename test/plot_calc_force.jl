@@ -5,7 +5,7 @@ end
 
 using Plots, WinchModels, LaTeXStrings
 
-wm = deepcopy(AsyncGenerator())
+wm = deepcopy(AsyncMachine())
 wm.inertia_total=4*wm.inertia_motor
 n = 256
 x = range(0, 9.0, length=n)

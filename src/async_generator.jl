@@ -39,7 +39,7 @@ const AWM = AbstractWinchModel
 
 Model of a winch with an async generator and a gearbox.
 """
-@with_kw mutable struct AsyncGenerator <: AbstractWinchModel @deftype Float64
+@with_kw mutable struct AsyncMachine <: AbstractWinchModel @deftype Float64
     set::Settings = se()
     "maximal nominal winch force [N]"
     max_winch_force = 4000
