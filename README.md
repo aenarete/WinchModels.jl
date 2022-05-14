@@ -11,8 +11,14 @@ wind energy system. A ground station has the following components:
 
 Currently implemented is a model of the 20kW ground station from Delft University of Technology.
 
+## Installation
+```julia
+]add https://github.com/aenarete/WinchModels.jl
+```
+
 ## Exported types
 ```julia
+AbstractWinchModel
 AsyncGenerator
 ```
 
