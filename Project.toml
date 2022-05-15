@@ -1,7 +1,7 @@
 name = "WinchModels"
 uuid = "7dcfa46b-7979-4771-bbf4-0aee0da42e1f"
 authors = ["Uwe Fechner <fechner@aenarete.eu> and contributors"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 KiteUtils = "90980105-b163-44e5-ba9f-8b1c83bb0533"
