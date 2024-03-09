@@ -12,8 +12,10 @@ wind energy system. A ground station has the following components:
 Currently implemented is a model of the 20kW ground station from Delft University of Technology.
 
 ## Installation
+First, install Julia 1.9 or higher. Then launch Julia and install this package using the package manager.
 ```julia
-]add https://github.com/aenarete/WinchModels.jl
+]
+add WinchModels
 ```
 
 ## Exported types
@@ -24,8 +26,8 @@ AsyncMachine
 
 ## Main functions
 ```julia
-calc_acceleration(wm::AsyncGenerator, set_speed, speed, force, use_brake = false)
-calc_force(wm::AsyncGenerator, set_speed, speed)
+calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false)
+calc_force(wm::AsyncMachine, set_speed, speed)
 ```
 <p align="center"><img src="./docs/working_principle.png" width="800" /></p>
 
@@ -48,7 +50,7 @@ smooth_sign
 ```julia
 using WinchModels, BenchmarkTools
 
-wm = AsyncGenerator()
+wm = AsyncMachine()
 @benchmark calc_acceleration(wm, 7.9, 8.0, 100.0)
 ```
 On i7-7700K 17ns for Julia, 1050ns with Python.
