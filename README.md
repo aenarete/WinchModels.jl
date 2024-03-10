@@ -4,7 +4,7 @@
 
 ## Introduction
 This package shall implement different models of ground stations for airborne
-wind energy system. A ground station has the following components:
+wind energy systems. A ground station has the following components:
 - motor/generator
 - gearbox (optional)
 - drum
