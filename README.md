@@ -14,8 +14,8 @@ Currently implemented is a model of the 20kW ground station from Delft Universit
 ## Installation
 First, install Julia 1.9 or higher. Then launch Julia and install this package using the package manager.
 ```julia
-]
-add WinchModels
+using Pkg
+pkg"add WinchModels"
 ```
 
 ## Exported types
