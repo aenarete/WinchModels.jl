@@ -1,6 +1,6 @@
 #= MIT License
 
-Copyright (c) 2022 Uwe Fechner
+Copyright (c) 2022, 2024 Uwe Fechner
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. =#
 
-#= Dynamic winch model. Assumptions:
-An asynchronous machine with a gearbox is used. The inertia
-of drum and motor are combined into one value (stiff coupling). =#
+#= Dynamic winch model. Two models are supported:
+- an asynchronous machine with a gearbox and a brake is used
+- a torque controlled machine with a gearbox without brake is used
+The inertia of drum and motor are combined into one value (stiff coupling). =#
 
 """
     mutable struct AsyncMachine

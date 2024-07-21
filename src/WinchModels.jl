@@ -38,5 +38,6 @@ abstract type AbstractWinchModel end
 const AWM = AbstractWinchModel
 
 include("async_generator.jl")
+include("torque_controlled_generator.jl")
 
 end
