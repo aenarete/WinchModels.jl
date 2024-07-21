@@ -10,9 +10,10 @@ wind energy systems. A ground station has the following components:
 - drum
 
 Currently implemented is a model of the 20kW ground station from Delft University of Technology.
+In addition, a generic, torque controlled winch without brake is implemented.
 
 ## Installation
-First, install Julia 1.9 or higher. Then launch Julia and install this package using the package manager.
+First, install Julia 1.10 or higher. Then launch Julia and install this package using the package manager.
 ```julia
 using Pkg
 pkg"add WinchModels"
@@ -22,11 +23,13 @@ pkg"add WinchModels"
 ```julia
 AbstractWinchModel
 AsyncMachine
+TorqueControlledMachine
 ```
 
 ## Main functions
 ```julia
-calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false)
+calc_acceleration(wm::AsyncMachine, speed, force;            set_torque=nothing, set_speed=nothing, use_brake = false)
+calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
 calc_force(wm::AsyncMachine, set_speed, speed)
 ```
 <p align="center"><img src="./docs/working_principle.png" width="800" /></p>
