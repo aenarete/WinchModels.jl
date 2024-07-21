@@ -23,14 +23,15 @@ end
     set_speed = 50.0
     speed = 49.0
     force = 1000.0
-    @test calc_acceleration(wm, set_speed, speed, force, false) ≈ -1.7857125353931111
+    @test calc_acceleration(wm, speed, force; set_speed, use_brake = false) ≈ -1.7857125353931111
     @test calc_force(wm, set_speed, speed) ≈ -1536.8834794369461
     set_speed = 0.11
     speed = 0.1
-    @test calc_acceleration(wm, set_speed, speed, force, true) ≈ -2.5
+    @test calc_acceleration(wm, speed, force; set_speed, use_brake=true) ≈ -2.5
+    
     set_speed = -0.11
     speed = -0.1
-    @test calc_acceleration(wm, set_speed, speed, force, true) ≈ 2.5
+    @test calc_acceleration(wm, speed, force; set_speed, use_brake=true) ≈ 2.5
     # compare results with Python
     wm.inertia_total=4*wm.inertia_motor
     @test wm.inertia_total ≈ 0.328
@@ -39,6 +40,7 @@ end
     @test calc_resistance(wm) ≈ 0.0726879353421
     @test calc_inductance(wm) ≈ 0.00297729832558
     @test (wm.omega_sn / (wm.gear_ratio/wm.drum_radius)) ≈ 4.09167107705
+    @test calc_acceleration(wm, 8, 0; set_speed=7.9) ≈ -3.13208622374
     @test calc_acceleration(wm, 7.9, 8, 0) ≈ -3.13208622374
     @test calc_force(wm, 4.0*1.025, 4.0) ≈ 4015.21454473
 end

@@ -97,6 +97,9 @@ function smooth_sign(x)
 end
 
 function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false)
+    calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed, use_brake)
+end
+function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
     if use_brake
         if abs(set_speed) < 0.9 * wm.v_min
             wm.brake = true
