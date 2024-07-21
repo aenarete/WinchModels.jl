@@ -1,6 +1,6 @@
 #= MIT License
 
-Copyright (c) 2022 Uwe Fechner
+Copyright (c) 2024 Uwe Fechner
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,13 @@ SOFTWARE. =#
 An asynchronous machine with a gearbox is used. The inertia
 of drum and motor are combined into one value (stiff coupling). =#
 
-"""
-    mutable struct AsyncMachine
 
-Model of a winch with an async generator and a gearbox.
 """
-@with_kw mutable struct AsyncMachine <: AbstractWinchModel @deftype Float64
+    mutable struct TorqueControlledMachine
+
+Model of a winch with an torqrue controlled generator and a gearbox.
+"""
+@with_kw mutable struct TorqueControlledMachine <: AbstractWinchModel @deftype Float64
     set::Settings = se()
     "maximal nominal winch force [N]"
     max_winch_force = 4000
@@ -39,24 +40,12 @@ Model of a winch with an async generator and a gearbox.
     gear_ratio = 6.2
     "inertia of the motor, as seen from the motor [kgm²]"
     inertia_motor = 0.082
-    "nominal motor voltage"
-    u_nom = 400.0/sqrt(3)
-    "rated synchronous motor speed [rad/s]"
-    omega_sn = 1500 / 60 * 2π
     "rated nominal motor speed [rad/s]"
     omega_mn = 1460 / 60 * 2π
     "rated torque at nominal motor speed [Nm]"
     tau_n = 121
-    "Rated maximum torque for synchronous motor speed [Nm]"
-    tau_b = 363
     " Inertia of the motor, gearbox and drum, as seen from the motor [kgm²]"
     inertia_total = 0.204
-    "minimal speed of the winch in m/s. If v_set is lower the brake is activated."
-    v_min = 0.2
-    "linear acceleration of the brake [m/s²]"
-    brake_acc = -25.0
-    "if the brake of the winch is activated"
-    brake::Bool = true;
     "coulomb friction [N]"
     f_coulomb = 122.0
     "coefficient for the viscous friction [Ns/m]"
@@ -64,38 +53,22 @@ Model of a winch with an async generator and a gearbox.
 end
 
 # calculated the motor reactance X [Ohm]
-function calc_reactance(wm::AsyncMachine)
+function calc_reactance(wm::TorqueControlledMachine)
     wm.u_nom^2 / (2 * wm.omega_sn * wm.tau_b) 
 end
 
-# calculate the motor inductance L [H]
-function calc_inductance(wm::AsyncMachine)
-    calc_reactance(wm) / wm.omega_sn
-end
-
-# calculate the motor resistance R2 [Ohm]
-function calc_resistance(wm::AsyncMachine)
-    (wm.u_nom^2 * (wm.omega_sn - wm.omega_mn))/(2wm.omega_sn^2) * (1 / wm.tau_n + sqrt(1 / wm.tau_n^2 - 1 / wm.tau_b^2))
-end
-
 # coulomb friction torque TAU_STATIC [Nm]
-function calc_coulomb_friction(wm::AsyncMachine)
+function calc_coulomb_friction(wm::TorqueControlledMachine)
     wm.f_coulomb * wm.drum_radius / wm.gear_ratio
 end
 
 # viscous friction torque C_F [Nm]
 # omega in rad/s
-function calc_viscous_friction(wm::AsyncMachine, omega)
+function calc_viscous_friction(wm::TorqueControlledMachine, omega)
     wm.c_vf * omega * wm.drum_radius^2 / wm.gear_ratio^2     
 end
 
-# differentiable version of the sign function
-function smooth_sign(x)
-    EPSILON = 6
-    x / sqrt(x * x + EPSILON * EPSILON)
-end
-
-function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false)
+function calc_acceleration(wm::TorqueControlledMachine, set_speed, speed, force, use_brake = false)
     if use_brake
         if abs(set_speed) < 0.9 * wm.v_min
             wm.brake = true
@@ -131,7 +104,7 @@ function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake 
 end
 
 """ Calculate the tether force as function of the synchronous tether speed and the speed. """
-function calc_force(wm::AsyncMachine, set_speed, speed)
+function calc_force(wm::TorqueControlledMachine, set_speed, speed)
     acc = calc_acceleration(wm, set_speed, speed, 0.0)
     (wm.gear_ratio/wm.drum_radius) ^ 2 * wm.inertia_total * acc
 end
