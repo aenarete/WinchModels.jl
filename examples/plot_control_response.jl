@@ -16,7 +16,5 @@ function force(v_ro)
     K * (v_eff)^2
 end
 
-v_ro = range(0, 8, length=100)
-f = force.(v_ro)
-plot(v_ro, f; xlabel="v_ro [m/s]", ylabel="Force [N]")
+
 
