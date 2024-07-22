@@ -9,7 +9,7 @@ v_ro =     3.0 # m/s
 K =      123.0 # N/(m/s)^2
 period =  30.0 # seconds
 
-function force(v_wind)
+function force(v_wind, v_ro)
     v_eff = v_wind*cosd(β) - v_ro
     if v_eff < 0
         return 0
@@ -27,8 +27,25 @@ function triangle_wave(t, period)
     end
 end
 
-time = range(0, 120, length=120)
-v_wind = 12.1 .+ 1.5*triangle_wave.(time, period)
-f = force.(v_wind)
+function calc_force(time, v_ro; period=30.0)
+    v_wind = 12.1 + 1.5*triangle_wave(time, period)
+    force(v_wind, v_ro)
+end
 
-plot(time, f; xlabel="Time [s]", ylabel="Force")
+function simulate(t_sim=120; dt=0.05)
+    time = 0:dt:t_sim
+    F = Float64[]
+    for t in time
+        v_ro = 3.0
+        # calculate the set_speed using a ramp
+        # calculate the acceleration
+        # calc_acceleration(wm::AsyncMachine, speed, force; set_speed=nothing, use_brake = false)
+        # integrate the acceleration to get the velocity
+
+        f = calc_force(t, v_ro)
+        push!(F, f)
+    end
+    plot(time, F; xlabel="Time [s]", ylabel="Force [N]")
+end
+
+simulate()
