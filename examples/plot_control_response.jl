@@ -2,7 +2,7 @@ using Pkg
 if ! ("ControlPlots" ∈ keys(Pkg.project().dependencies))
     using TestEnv; TestEnv.activate()
 end
-using ControlPlots
+using ControlPlots, WinchModels
 
 v_ro =     3.0 # m/s
 β =       26.0 # degrees
@@ -32,14 +32,16 @@ function calc_force(time, v_ro; period=30.0)
     force(v_wind, v_ro)
 end
 
-function simulate(t_sim=120; dt=0.05)
+function simulate(t_sim=120; f_0=7663, dt=0.05)
     time = 0:dt:t_sim
     F = Float64[]
+    f = f_0
+    wm=AsyncMachine()
     for t in time
         v_ro = 3.0
         # calculate the set_speed using a ramp
         # calculate the acceleration
-        # calc_acceleration(wm::AsyncMachine, speed, force; set_speed=nothing, use_brake = false)
+        # calc_acceleration(wm::AsyncMachine, speed, f; set_speed=nothing, use_brake = false)
         # integrate the acceleration to get the velocity
 
         f = calc_force(t, v_ro)
