@@ -32,22 +32,29 @@ function calc_force(time, v_ro; period=30.0)
     force(v_wind, v_ro)
 end
 
-function simulate(t_sim=120; f_0=7663, dt=0.05)
+function simulate(t_sim=120; f_0=7663, speed_0=3.1735, dt=0.005)
     time = 0:dt:t_sim
     F = Float64[]
+    ACC = Float64[]
+    V_RO = Float64[]
     f = f_0
+    v_ro = speed_0
     wm=AsyncMachine()
     for t in time
-        v_ro = 3.0
         # calculate the set_speed using a ramp
         # calculate the acceleration
-        # calc_acceleration(wm::AsyncMachine, speed, f; set_speed=nothing, use_brake = false)
+        acc = calc_acceleration(wm::AsyncMachine, v_ro, f; set_speed=3.0, use_brake = false)
+        push!(ACC, acc)
         # integrate the acceleration to get the velocity
-
+        v_ro += acc*dt
+        push!(V_RO, v_ro)
         f = calc_force(t, v_ro)
         push!(F, f)
     end
-    plot(time, F; xlabel="Time [s]", ylabel="Force [N]")
+    p1=plot(time, F; xlabel="Time [s]", ylabel="Force [N]", fig="force")
+    p2=plot(time, V_RO; xlabel="Time [s]", ylabel="Speed [m/s]", fig="speed")
+    p3=plot(time, ACC; xlabel="Time [s]", ylabel="Acceleration [m/s^2]", fig="acceleration")
+    display(p1); display(p2); display(p3)
 end
 
 simulate()
