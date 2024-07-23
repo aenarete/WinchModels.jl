@@ -92,7 +92,8 @@ function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, s
     omega      = wm.gear_ratio/wm.drum_radius * speed
     τ = calc_coulomb_friction(wm) * smooth_sign(omega) + calc_viscous_friction(wm, omega)
     # calculate tau based on the set_torque
-
+    K = 1.0
+    tau = set_torque * K
     # calculate tau_total based on the friction
     tau_total = tau + wm.drum_radius / wm.gear_ratio * force * 4000.0 / wm.max_winch_force - τ
     # calculate omega_dot_m based on tau_total and the inertia
