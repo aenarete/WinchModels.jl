@@ -43,7 +43,7 @@ function simulate(t_sim=120; f_0=7663, speed_0=3.1735, dt=0.005)
     for t in time
         # calculate the set_speed using a ramp
         # calculate the acceleration
-        acc = calc_acceleration(wm, v_ro, f; set_speed=3.0, use_brake = false)
+        acc = calc_acceleration(wm, v_ro, f; set_torque=7800, use_brake = false)
         push!(ACC, acc)
         # integrate the acceleration to get the velocity
         v_ro += acc*dt
