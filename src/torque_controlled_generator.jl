@@ -101,8 +101,13 @@ function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque
     wm.drum_radius/wm.gear_ratio * omega_dot_m
 end
 
-""" Calculate the tether force as function of the synchronous tether speed and the speed. """
+""" Calculate the tether force as function of the set_speed and speed. """
 function calc_force(wm::TorqueControlledMachine, set_speed, speed)
+    calc_force(wm::TorqueControlledMachine, speed; set_speed)
+end
+
+""" Calculate the tether force as function of the set_speed, set_torque and speed. """
+function calc_force(wm::TorqueControlledMachine, speed; set_speed=nothing, set_torque=nothing)
     acc = calc_acceleration(wm, set_speed, speed, 0.0)
     (wm.gear_ratio/wm.drum_radius) ^ 2 * wm.inertia_total * acc
 end
