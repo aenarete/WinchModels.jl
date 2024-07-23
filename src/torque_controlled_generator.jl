@@ -107,6 +107,7 @@ function calc_force(wm::TorqueControlledMachine, set_speed, speed)
 end
 
 """ Calculate the tether force as function of the set_speed, set_torque and speed. """
+# TODO: fix the calculation of the force
 function calc_force(wm::TorqueControlledMachine, speed; set_speed=nothing, set_torque=nothing)
     acc = calc_acceleration(wm, set_speed, speed, 0.0)
     (wm.gear_ratio/wm.drum_radius) ^ 2 * wm.inertia_total * acc
