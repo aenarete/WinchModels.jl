@@ -68,7 +68,7 @@ function calc_viscous_friction(wm::TorqueControlledMachine, omega)
     wm.c_vf * omega * wm.drum_radius^2 / wm.gear_ratio^2     
 end
 
-function calc_acceleration(wm::TorqueControlledMachine, set_speed, speed, force, use_brake = false)
+function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
     if use_brake
         if abs(set_speed) < 0.9 * wm.v_min
             wm.brake = true
@@ -82,21 +82,15 @@ function calc_acceleration(wm::TorqueControlledMachine, set_speed, speed, force,
         end
     end
     # limit the acceleration
-    if set_speed > speed + 1  
-        set_speed = speed + 1
-    elseif set_speed < speed - 1
-        set_speed = speed - 1
+    if ! isnothing(set_speed)
+        if set_speed > speed + 1  
+            set_speed = speed + 1
+        elseif set_speed < speed - 1
+            set_speed = speed - 1
+        end
     end
     omega      = wm.gear_ratio/wm.drum_radius * speed
-    omega_sync = wm.gear_ratio/wm.drum_radius * set_speed
-    delta = omega_sync - omega
-    R2 = calc_resistance(wm)
-    L  = calc_inductance(wm)
-    if abs(omega_sync) <= wm.omega_sn
-        omega_dot_m = (wm.u_nom^2 * R2 * delta) / (wm.omega_sn^2 * (R2^2 + L^2 * delta^2))
-    else
-        omega_dot_m = (wm.u_nom^2 * R2 * delta) / (omega_sync^2 * (R2^2 + L^2 * delta^2))
-    end
+    # calc omega_dot_m
     τ = calc_coulomb_friction(wm) * smooth_sign(omega) + calc_viscous_friction(wm, omega)
     omega_dot_m += wm.drum_radius / wm.gear_ratio * force * 4000.0 / wm.max_winch_force - τ
     omega_dot_m *= 1/wm.inertia_total
