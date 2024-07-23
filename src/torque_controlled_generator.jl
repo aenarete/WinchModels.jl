@@ -68,7 +68,7 @@ function calc_viscous_friction(wm::TorqueControlledMachine, omega)
     wm.c_vf * omega * wm.drum_radius^2 / wm.gear_ratio^2     
 end
 
-function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
+function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
     if use_brake
         if abs(set_speed) < 0.9 * wm.v_min
             wm.brake = true
