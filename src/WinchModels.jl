@@ -23,11 +23,21 @@ SOFTWARE. =#
 module WinchModels
 using KiteUtils, Parameters
 
-export AbstractWinchModel, AsyncMachine                                    # types
+export AbstractWinchModel, AsyncMachine, TorqueControlledMachine           # types
 export calc_reactance, calc_inductance, calc_resistance                    # helper functions
 export calc_coulomb_friction, calc_viscous_friction, smooth_sign           # helper functions
 export calc_acceleration, calc_force                                       # main functions
 
+"""
+    abstract type AbstractWinchModel
+
+All winch models must inherit from this type. All methods that are defined on this type.
+with all winch models. All exported methods must work on this type. 
+"""
+abstract type AbstractWinchModel end
+const AWM = AbstractWinchModel
+
 include("async_generator.jl")
+include("torque_controlled_generator.jl")
 
 end

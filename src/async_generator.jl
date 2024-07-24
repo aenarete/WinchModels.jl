@@ -1,6 +1,6 @@
 #= MIT License
 
-Copyright (c) 2022 Uwe Fechner
+Copyright (c) 2022, 2024 Uwe Fechner
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,19 +20,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. =#
 
-#= Dynamic winch model. Assumptions:
-An asynchronous machine with a gearbox is used. The inertia
-of drum and motor are combined into one value (stiff coupling). =#
-
-"""
-    abstract type AbstractWinchModel
-
-All winch models must inherit from this type. All methods that are defined on this type.
-with all winch models. All exported methods must work on this type. 
-"""
-abstract type AbstractWinchModel end
-
-const AWM = AbstractWinchModel
+#= Dynamic winch model. Two models are supported:
+- an asynchronous machine with a gearbox and a brake is used
+- a torque controlled machine with a gearbox without brake is used
+The inertia of drum and motor are combined into one value (stiff coupling). =#
 
 """
     mutable struct AsyncMachine
@@ -106,6 +97,9 @@ function smooth_sign(x)
 end
 
 function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false)
+    calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed, use_brake)
+end
+function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
     if use_brake
         if abs(set_speed) < 0.9 * wm.v_min
             wm.brake = true
