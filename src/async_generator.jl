@@ -31,7 +31,7 @@ The inertia of drum and motor are combined into one value (stiff coupling). =#
 Model of a winch with an async generator and a gearbox.
 """
 @with_kw mutable struct AsyncMachine <: AbstractWinchModel @deftype Float64
-    set::Settings = se()
+    set::Union{Settings, Nothing} = nothing
     "nominal motor voltage"
     u_nom = 400.0/sqrt(3)
     "rated synchronous motor speed [rad/s]"
@@ -48,6 +48,12 @@ Model of a winch with an async generator and a gearbox.
     brake_acc = -25.0
     "if the brake of the winch is activated"
     brake::Bool = true;
+end
+
+function AsyncMachine(set::Settings)
+    wm = AsyncMachine()
+    wm.set = set
+    wm
 end
 
 # calculated the motor reactance X [Ohm]

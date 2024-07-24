@@ -3,9 +3,10 @@ using Test
 
 cd("..")
 KiteUtils.set_data_path("") 
+set = se()
 
  @testset "calc_force" begin
-    wm = deepcopy(AsyncMachine())
+    wm = deepcopy(AsyncMachine(set))
     wm.set.inertia_total=4*0.082
     @test wm.set.inertia_total ≈ 0.328
     @test (-calc_force(wm, 1.0, 0.0))  ≈ -12620.5127746
@@ -13,7 +14,7 @@ KiteUtils.set_data_path("")
 end
 
 @testset "WinchModels.jl" begin
-    wm = deepcopy(AsyncMachine())
+    wm = deepcopy(AsyncMachine(set))
     @test calc_reactance(wm)  ≈ 0.4676729273591048
     @test calc_inductance(wm) ≈ 0.002977298325578337
     @test calc_resistance(wm) ≈ 0.07268793534211404
