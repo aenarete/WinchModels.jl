@@ -1,3 +1,4 @@
+# example of using a torque controlled winch model
 using Pkg
 if ! ("ControlPlots" ∈ keys(Pkg.project().dependencies))
     using TestEnv; TestEnv.activate()
@@ -27,34 +28,42 @@ function triangle_wave(t, period)
     end
 end
 
-function calc_force(time, v_ro; period=30.0)
+function calc_force1(time, v_ro; period=30.0)
     v_wind = 12.1 + 1.5*triangle_wave(time, period)
-    force(v_wind, v_ro)
+    force(v_wind, v_ro), v_wind
 end
 
-function simulate(t_sim=120; f_0=7663, speed_0=3.1735, dt=0.005)
+function simulate(wm, t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
     time = 0:dt:t_sim
     F = Float64[]
     ACC = Float64[]
     V_RO = Float64[]
+    V_WIND = Float64[]
     f = f_0
     v_ro = speed_0
-    wm=AsyncMachine()
+    set_force = 7663
+    n = wm.gear_ratio
+    radius = wm.drum_radius
+    set_torque = -set_force/n*radius
     for t in time
-        # calculate the set_speed using a ramp
         # calculate the acceleration
-        acc = calc_acceleration(wm::AsyncMachine, v_ro, f; set_speed=3.0, use_brake = false)
+        acc = calc_acceleration(wm, v_ro, f; set_torque, use_brake = false)
         push!(ACC, acc)
         # integrate the acceleration to get the velocity
         v_ro += acc*dt
         push!(V_RO, v_ro)
-        f = calc_force(t, v_ro)
+        # calculate the force using a triangle wind speed
+        f, v_wind = calc_force1(t, v_ro)
+        push!(V_WIND, v_wind)
         push!(F, f)
     end
     p1=plot(time, F; xlabel="Time [s]", ylabel="Force [N]", fig="force")
-    p2=plot(time, V_RO; xlabel="Time [s]", ylabel="Speed [m/s]", fig="speed")
+    p2=plot(time, V_RO; xlabel="Time [s]", ylabel="v_ro [m/s]", fig="reelout-speed")
     p3=plot(time, ACC; xlabel="Time [s]", ylabel="Acceleration [m/s^2]", fig="acceleration")
-    display(p1); display(p2); display(p3)
+    p4=plot(time, V_WIND; xlabel="Time [s]", ylabel="Wind speed [m/s]", fig="wind-speed")
+    display(p1); display(p2); display(p3); display(p4)
+    nothing
 end
 
-simulate()
+wm = TorqueControlledMachine()
+simulate(wm)
