@@ -21,3 +21,9 @@ with $K=328~Ns/m$ and the elevation angle $\beta = 26^o$.
 
 Furthermore we assume the following wind speed:
 <p align="center"><img src="https://raw.githubusercontent.com/aenarete/WinchModels.jl/torque/docs/wind-speed.png" width="500" /></p>
+
+This results in the following tether force:
+<p align="center"><img src="https://raw.githubusercontent.com/aenarete/WinchModels.jl/torque/docs/force.png" width="500" /></p>
+
+and the following reel-out speed:
+<p align="center"><img src="https://raw.githubusercontent.com/aenarete/WinchModels.jl/torque/docs/reelout-speed.png" width="500" /></p>
