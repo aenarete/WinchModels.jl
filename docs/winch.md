@@ -8,7 +8,7 @@ The torque exerted by the drum depends on the tether force $F$ as follows:
 $$ \tau_d = \frac{r}{n}~F$$
 
 The friction is modelled as the combination of a viscous friction component with the friction coefficient $c_f$ and the static friction $\tau_s$
-$$ \tau_f = c_f v_{t,o} + \tau_s sign(v_{t,o})$$
+$$ \tau_f = c_f v_{t,o} + \tau_s~\mathrm{sign}(v_{t,o})$$
 
 ### Torque controlled winch
 If the winch uses a generator with Direct Torque Control (DTC) it is possible to calculate $a_{t,o}$ as function of $\tau_g$, $F$ and $v_{t,o}$.
