@@ -32,12 +32,6 @@ Model of a winch with an torqrue controlled generator and a gearbox.
 """
 @with_kw mutable struct TorqueControlledMachine <: AbstractWinchModel @deftype Float64
     set::Settings = se()
-    "maximal nominal winch force [N]"
-    max_winch_force = 4000
-    "radius of the drum [m]"
-    drum_radius = 0.1615
-    "ratio of the gear box"
-    gear_ratio = 6.2
     "inertia of the motor, as seen from the motor [kgm²]"
     inertia_motor = 0.082
     "rated nominal motor speed [rad/s]"
@@ -52,6 +46,12 @@ Model of a winch with an torqrue controlled generator and a gearbox.
     c_vf = 30.6
 end
 
+function TorqueControlledMachine(set::Settings)
+    s = TorqueControlledMachine()
+    s.set = set
+    return s
+end
+
 # calculated the motor reactance X [Ohm]
 function calc_reactance(wm::TorqueControlledMachine)
     wm.u_nom^2 / (2 * wm.omega_sn * wm.tau_b) 
@@ -59,13 +59,13 @@ end
 
 # coulomb friction torque TAU_STATIC [Nm]
 function calc_coulomb_friction(wm::TorqueControlledMachine)
-    wm.f_coulomb * wm.drum_radius / wm.gear_ratio
+    wm.f_coulomb * wm.set.drum_radius / wm.set.gear_ratio
 end
 
 # viscous friction torque C_F [Nm]
 # omega in rad/s
 function calc_viscous_friction(wm::TorqueControlledMachine, omega)
-    wm.c_vf * omega * wm.drum_radius^2 / wm.gear_ratio^2     
+    wm.c_vf * omega * wm.set.drum_radius^2 / wm.set.gear_ratio^2     
 end
 
 function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
@@ -89,16 +89,16 @@ function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque
             set_speed = speed - 1
         end
     end
-    omega      = wm.gear_ratio/wm.drum_radius * speed
+    omega      = wm.set.gear_ratio/wm.set.drum_radius * speed
     τ = calc_coulomb_friction(wm) * smooth_sign(omega) + calc_viscous_friction(wm, omega)
     # calculate tau based on the set_torque
     K = 1.0
     tau = set_torque * K
     # calculate tau_total based on the friction
-    tau_total = tau + wm.drum_radius / wm.gear_ratio * force * 4000.0 / wm.max_winch_force - τ
+    tau_total = tau + wm.set.drum_radius / wm.set.gear_ratio * force * 4000.0 / wm.set.max_winch_force - τ
     # calculate omega_dot_m based on tau_total and the inertia
     omega_dot_m = tau_total/wm.inertia_total
-    wm.drum_radius/wm.gear_ratio * omega_dot_m
+    wm.set.drum_radius/wm.set.gear_ratio * omega_dot_m
 end
 
 # """ Calculate the tether force as function of the set_speed and speed. """
@@ -110,5 +110,5 @@ end
 # # TODO: fix the calculation of the force
 # function calc_force(wm::TorqueControlledMachine, speed; set_speed=nothing, set_torque=nothing)
 #     acc = calc_acceleration(wm, set_speed, speed, 0.0)
-#     (wm.gear_ratio/wm.drum_radius) ^ 2 * wm.inertia_total * acc
+#     (wm.set.gear_ratio/wm.set.drum_radius) ^ 2 * wm.inertia_total * acc
 # end

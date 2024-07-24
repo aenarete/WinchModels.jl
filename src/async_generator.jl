@@ -38,8 +38,6 @@ Model of a winch with an async generator and a gearbox.
     drum_radius = 0.1615
     "ratio of the gear box"
     gear_ratio = 6.2
-    "inertia of the motor, as seen from the motor [kgm²]"
-    inertia_motor = 0.082
     "nominal motor voltage"
     u_nom = 400.0/sqrt(3)
     "rated synchronous motor speed [rad/s]"
