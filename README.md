@@ -54,9 +54,10 @@ smooth_sign
 
 ## Performance
 ```julia
-using WinchModels, BenchmarkTools
+using WinchModels, BenchmarkTools, KiteUtils
 
-wm = AsyncMachine()
+set = se()
+wm = AsyncMachine(set)
 @benchmark calc_acceleration(wm, 7.9, 8.0, 100.0)
 ```
 On i7-7700K 17ns for Julia, 1050ns with Python.
