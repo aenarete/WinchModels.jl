@@ -32,7 +32,7 @@ function calc_force1(time, v_ro; period=30.0)
     force(v_wind, v_ro)
 end
 
-function simulate(t_sim=120; f_0=7900, speed_0=3.1735, dt=0.005)
+function simulate(t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
     time = 0:dt:t_sim
     F = Float64[]
     ACC = Float64[]
