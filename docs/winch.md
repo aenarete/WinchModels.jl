@@ -12,3 +12,11 @@ $$ \tau_f = c_f v_{t,o} + \tau_s~\mathrm{sign}(v_{t,o})$$
 
 ### Torque controlled winch
 If the winch uses a generator with Direct Torque Control (DTC) it is possible to calculate $a_{t,o}$ as function of $\tau_g$, $F$ and $v_{t,o}$.
+
+### Test case
+
+We assume an ideal kite that pulls with the force:
+$$ F=(v_w~\mathrm{cos}~\beta)^2 K$$
+with $K=328~Ns/m$ and the elevation angle $\beta = 26^o$.
+
+Furthermore we assume the following wind speed:
