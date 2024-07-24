@@ -1,7 +1,9 @@
 ## Winch model
 
 First, we calculate the acceleration of the tether at the ground station. It can be calculated as
-$$ a_{t,o} = \frac{1}{I_w} \frac{r}{n} (\tau_g + \tau_d - \tau_f) $$
+$$a_{t,o} = \frac{1}{I_w} \frac{r}{n} (\tau_g + \tau_d - \tau_f)$$
+
+
 where $I_w$ is the winch inertia as seen from the generator, $r$ the drum radius $n$ the gearbox ratio, $\tau_g$ the generator torque, $\tau_d$ the torque exerted by the drum on the generator and $\tau_f$ the friction torque.
 
 The torque exerted by the drum depends on the tether force $F$ as follows:
