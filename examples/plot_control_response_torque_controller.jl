@@ -32,20 +32,19 @@ function calc_force1(time, v_ro; period=30.0)
     force(v_wind, v_ro)
 end
 
-function simulate(t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
+function simulate(wm, t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
     time = 0:dt:t_sim
     F = Float64[]
     ACC = Float64[]
     V_RO = Float64[]
     f = f_0
     v_ro = speed_0
-    wm = TorqueControlledMachine()
+    set_force = 7663
+    n = wm.gear_ratio
+    radius = wm.drum_radius
+    set_torque = -set_force/n*radius
     for t in time
         # calculate the acceleration
-        set_force = 7663
-        n = 6.2
-        radius = 0.1615
-        set_torque = -set_force/n*radius
         acc = calc_acceleration(wm, v_ro, f; set_torque, use_brake = false)
         push!(ACC, acc)
         # integrate the acceleration to get the velocity
@@ -62,4 +61,5 @@ function simulate(t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
     nothing
 end
 
-simulate()
+wm = TorqueControlledMachine()
+simulate(wm)
