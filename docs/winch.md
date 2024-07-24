@@ -38,3 +38,17 @@ To execute the test script, run:
 ```julia
 include("examples/torque_control.jl")
 ```
+
+The settings of the winch model are defined in `settings.yaml` as follows:
+```yaml
+winch:
+    winch_model: "AsyncMachine" # or TorqueControlledMachine
+    max_force: 4000        # maximal (nominal) tether force; short overload allowed [N]
+    v_ro_max:  8.0         # maximal reel-out speed                          [m/s]
+    v_ro_min: -8.0         # minimal reel-out speed (=max reel-in speed)     [m/s]
+    drum_radius: 0.1615    # radius of the drum                              [m]
+    gear_ratio: 6.2        # gear ratio of the winch                         [-]   
+    inertia_total: 0.204   # total inertia, as seen from the motor/generator [kgm²]
+    f_coulomb: 122.0       # coulomb friction                                [N]
+    c_vf: 30.6             # coefficient for the viscous friction            [Ns/m]
+```
