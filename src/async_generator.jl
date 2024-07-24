@@ -32,12 +32,6 @@ Model of a winch with an async generator and a gearbox.
 """
 @with_kw mutable struct AsyncMachine <: AbstractWinchModel @deftype Float64
     set::Settings = se()
-    "maximal nominal winch force [N]"
-    max_winch_force = 4000
-    "radius of the drum [m]"
-    drum_radius = 0.1615
-    "ratio of the gear box"
-    gear_ratio = 6.2
     "nominal motor voltage"
     u_nom = 400.0/sqrt(3)
     "rated synchronous motor speed [rad/s]"
@@ -48,18 +42,12 @@ Model of a winch with an async generator and a gearbox.
     tau_n = 121
     "Rated maximum torque for synchronous motor speed [Nm]"
     tau_b = 363
-    " Inertia of the motor, gearbox and drum, as seen from the motor [kgm²]"
-    inertia_total = 0.204
     "minimal speed of the winch in m/s. If v_set is lower the brake is activated."
     v_min = 0.2
     "linear acceleration of the brake [m/s²]"
     brake_acc = -25.0
     "if the brake of the winch is activated"
     brake::Bool = true;
-    "coulomb friction [N]"
-    f_coulomb = 122.0
-    "coefficient for the viscous friction [Ns/m]"
-    c_vf = 30.6
 end
 
 # calculated the motor reactance X [Ohm]
@@ -79,13 +67,13 @@ end
 
 # coulomb friction torque TAU_STATIC [Nm]
 function calc_coulomb_friction(wm::AsyncMachine)
-    wm.f_coulomb * wm.drum_radius / wm.gear_ratio
+    wm.set.f_coulomb * wm.set.drum_radius / wm.set.gear_ratio
 end
 
 # viscous friction torque C_F [Nm]
 # omega in rad/s
 function calc_viscous_friction(wm::AsyncMachine, omega)
-    wm.c_vf * omega * wm.drum_radius^2 / wm.gear_ratio^2     
+    wm.set.c_vf * omega * wm.set.drum_radius^2 / wm.set.gear_ratio^2     
 end
 
 # differentiable version of the sign function
@@ -116,8 +104,8 @@ function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, s
     elseif set_speed < speed - 1
         set_speed = speed - 1
     end
-    omega      = wm.gear_ratio/wm.drum_radius * speed
-    omega_sync = wm.gear_ratio/wm.drum_radius * set_speed
+    omega      = wm.set.gear_ratio/wm.set.drum_radius * speed
+    omega_sync = wm.set.gear_ratio/wm.set.drum_radius * set_speed
     delta = omega_sync - omega
     R2 = calc_resistance(wm)
     L  = calc_inductance(wm)
@@ -127,13 +115,13 @@ function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, s
         omega_dot_m = (wm.u_nom^2 * R2 * delta) / (omega_sync^2 * (R2^2 + L^2 * delta^2))
     end
     τ = calc_coulomb_friction(wm) * smooth_sign(omega) + calc_viscous_friction(wm, omega)
-    omega_dot_m += wm.drum_radius / wm.gear_ratio * force * 4000.0 / wm.max_winch_force - τ
-    omega_dot_m *= 1/wm.inertia_total
-    wm.drum_radius/wm.gear_ratio * omega_dot_m
+    omega_dot_m += wm.set.drum_radius / wm.set.gear_ratio * force * 4000.0 / wm.set.max_winch_force - τ
+    omega_dot_m *= 1/wm.set.inertia_total
+    wm.set.drum_radius/wm.set.gear_ratio * omega_dot_m
 end
 
 """ Calculate the tether force as function of the synchronous tether speed and the speed. """
 function calc_force(wm::AsyncMachine, set_speed, speed)
     acc = calc_acceleration(wm, set_speed, speed, 0.0)
-    (wm.gear_ratio/wm.drum_radius) ^ 2 * wm.inertia_total * acc
+    (wm.set.gear_ratio/wm.set.drum_radius) ^ 2 * wm.set.inertia_total * acc
 end

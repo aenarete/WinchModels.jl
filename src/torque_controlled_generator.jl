@@ -30,26 +30,12 @@ of drum and motor are combined into one value (stiff coupling). =#
 
 Model of a winch with an torqrue controlled generator and a gearbox.
 """
-@with_kw mutable struct TorqueControlledMachine <: AbstractWinchModel @deftype Float64
-    set::Settings = se()
-    "inertia of the motor, as seen from the motor [kgm²]"
-    inertia_motor = 0.082
-    "rated nominal motor speed [rad/s]"
-    omega_mn = 1460 / 60 * 2π
-    "rated torque at nominal motor speed [Nm]"
-    tau_n = 121
-    " Inertia of the motor, gearbox and drum, as seen from the motor [kgm²]"
-    inertia_total = 0.204
-    "coulomb friction [N]"
-    f_coulomb = 122.0
-    "coefficient for the viscous friction [Ns/m]"
-    c_vf = 30.6
-end
-
-function TorqueControlledMachine(set::Settings)
-    s = TorqueControlledMachine()
-    s.set = set
-    return s
+struct TorqueControlledMachine <: AbstractWinchModel
+    set::Settings
+    # "inertia of the motor, as seen from the motor [kgm²]"
+    # inertia_motor = 0.082
+    # " Inertia of the motor, gearbox and drum, as seen from the motor [kgm²]"
+    # inertia_total = 0.204
 end
 
 # calculated the motor reactance X [Ohm]
@@ -59,13 +45,13 @@ end
 
 # coulomb friction torque TAU_STATIC [Nm]
 function calc_coulomb_friction(wm::TorqueControlledMachine)
-    wm.f_coulomb * wm.set.drum_radius / wm.set.gear_ratio
+    wm.set.f_coulomb * wm.set.drum_radius / wm.set.gear_ratio
 end
 
 # viscous friction torque C_F [Nm]
 # omega in rad/s
 function calc_viscous_friction(wm::TorqueControlledMachine, omega)
-    wm.c_vf * omega * wm.set.drum_radius^2 / wm.set.gear_ratio^2     
+    wm.set.c_vf * omega * wm.set.drum_radius^2 / wm.set.gear_ratio^2     
 end
 
 function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
@@ -95,9 +81,9 @@ function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque
     K = 1.0
     tau = set_torque * K
     # calculate tau_total based on the friction
-    tau_total = tau + wm.set.drum_radius / wm.set.gear_ratio * force * 4000.0 / wm.set.max_winch_force - τ
+    tau_total = tau + wm.set.drum_radius / wm.set.gear_ratio * force * 4000.0 / wm.set.max_force - τ
     # calculate omega_dot_m based on tau_total and the inertia
-    omega_dot_m = tau_total/wm.inertia_total
+    omega_dot_m = tau_total/wm.set.inertia_total
     wm.set.drum_radius/wm.set.gear_ratio * omega_dot_m
 end
 
@@ -110,5 +96,5 @@ end
 # # TODO: fix the calculation of the force
 # function calc_force(wm::TorqueControlledMachine, speed; set_speed=nothing, set_torque=nothing)
 #     acc = calc_acceleration(wm, set_speed, speed, 0.0)
-#     (wm.set.gear_ratio/wm.set.drum_radius) ^ 2 * wm.inertia_total * acc
+#     (wm.set.gear_ratio/wm.set.drum_radius) ^ 2 * wm.set.inertia_total * acc
 # end

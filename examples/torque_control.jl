@@ -10,6 +10,8 @@ v_ro =     3.0 # m/s
 K =      123.0 # N/(m/s)^2
 period =  30.0 # seconds
 
+set::Settings = WinchModels.se()
+
 function force(v_wind, v_ro)
     v_eff = v_wind*cosd(β) - v_ro
     if v_eff < 0
@@ -42,8 +44,8 @@ function simulate(wm, t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
     f = f_0
     v_ro = speed_0
     set_force = 7663
-    n = wm.gear_ratio
-    radius = wm.drum_radius
+    n = wm.set.gear_ratio
+    radius = wm.set.drum_radius
     set_torque = -set_force/n*radius
     for t in time
         # calculate the acceleration
@@ -65,5 +67,5 @@ function simulate(wm, t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
     nothing
 end
 
-wm = TorqueControlledMachine()
+wm = TorqueControlledMachine(set)
 simulate(wm)
