@@ -29,7 +29,7 @@ end
 
 function calc_force1(time, v_ro; period=30.0)
     v_wind = 12.1 + 1.5*triangle_wave(time, period)
-    force(v_wind, v_ro)
+    force(v_wind, v_ro), v_wind
 end
 
 function simulate(wm, t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
@@ -37,6 +37,7 @@ function simulate(wm, t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
     F = Float64[]
     ACC = Float64[]
     V_RO = Float64[]
+    V_WIND = Float64[]
     f = f_0
     v_ro = speed_0
     set_force = 7663
@@ -51,13 +52,15 @@ function simulate(wm, t_sim=120; f_0=7900, speed_0=2.87, dt=0.005)
         v_ro += acc*dt
         push!(V_RO, v_ro)
         # calculate the force using a triangle wind speed
-        f = calc_force1(t, v_ro)
+        f, v_wind = calc_force1(t, v_ro)
+        push!(V_WIND, v_wind)
         push!(F, f)
     end
     p1=plot(time, F; xlabel="Time [s]", ylabel="Force [N]", fig="force")
-    p2=plot(time, V_RO; xlabel="Time [s]", ylabel="Speed [m/s]", fig="speed")
+    p2=plot(time, V_RO; xlabel="Time [s]", ylabel="v_ro [m/s]", fig="reelout-speed")
     p3=plot(time, ACC; xlabel="Time [s]", ylabel="Acceleration [m/s^2]", fig="acceleration")
-    display(p1); display(p2); display(p3)
+    p4=plot(time, V_WIND; xlabel="Time [s]", ylabel="Wind speed [m/s]", fig="wind-speed")
+    display(p1); display(p2); display(p3); display(p4)
     nothing
 end
 
