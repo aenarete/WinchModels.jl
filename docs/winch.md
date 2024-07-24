@@ -27,3 +27,8 @@ This results in the following tether force:
 
 and the following reel-out speed:
 <p align="center"><img src="https://raw.githubusercontent.com/aenarete/WinchModels.jl/torque/docs/reelout-speed.png" width="500" /></p>
+
+To execute the test script, run:
+```julia
+include("examples/torque_control.jl")
+```
