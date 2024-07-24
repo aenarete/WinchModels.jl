@@ -4,7 +4,7 @@ First, we calculate the acceleration of the tether at the ground station. It can
 
 $$a_\mathrm{t,o} = \frac{1}{I_w} \frac{r}{n} (\tau_\mathrm{g} + \tau_\mathrm{d} - \tau_\mathrm{f})$$
 
-where $I_w$ is the winch inertia as seen from the generator, $r$ the drum radius $n$ the gearbox ratio, $\tau_g$ the generator torque, $\tau_d$ the torque exerted by the drum on the generator and $\tau_f$ the friction torque.
+where $I_w$ is the winch inertia as seen from the generator, $r$ the drum radius, $n$ the gearbox ratio, $\tau_g$ the generator torque, $\tau_d$ the torque exerted by the drum on the generator and $\tau_f$ the friction torque.
 
 The torque exerted by the drum depends on the tether force $F$ as follows:
 
@@ -20,7 +20,9 @@ If the winch uses a generator with Direct Torque Control (DTC) it is possible to
 ### Test case
 
 We assume an ideal kite that pulls with the force:
+
 $$ F=(v_\mathrm{w}~\mathrm{cos}~\beta)^2 K$$
+
 with $K=328~Ns/m$ and the elevation angle $\beta = 26^o$.
 
 Furthermore we assume the following wind speed:
