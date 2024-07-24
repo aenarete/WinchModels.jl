@@ -12,6 +12,9 @@ wind energy systems. A ground station has the following components:
 Currently implemented is a model of the 20kW ground station from Delft University of Technology.
 In addition, a generic, torque controlled winch without brake is implemented.
 
+## Mathematical background
+[Torque controlled winch](docs/winch.md).  
+
 ## Installation
 First, install Julia 1.10 or higher. Then launch Julia and install this package using the package manager.
 ```julia
