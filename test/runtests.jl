@@ -6,8 +6,8 @@ KiteUtils.set_data_path("")
 
  @testset "calc_force" begin
     wm = deepcopy(AsyncMachine())
-    wm.inertia_total=4*wm.inertia_motor
-    @test wm.inertia_total ≈ 0.328
+    wm.set.inertia_total=4*0.082
+    @test wm.set.inertia_total ≈ 0.328
     @test (-calc_force(wm, 1.0, 0.0))  ≈ -12620.5127746
     @test (-calc_force(wm, 0.15, 9.0)) ≈   3698.78395182
 end
@@ -33,13 +33,13 @@ end
     speed = -0.1
     @test calc_acceleration(wm, speed, force; set_speed, use_brake=true) ≈ 2.5
     # compare results with Python
-    wm.inertia_total=4*wm.inertia_motor
-    @test wm.inertia_total ≈ 0.328
+    wm.set.inertia_total=4*0.082
+    @test wm.set.inertia_total ≈ 0.328
     @test calc_viscous_friction(wm, 1.0) ≈ 0.0207626651925
     @test calc_coulomb_friction(wm) ≈ 3.17790322581
     @test calc_resistance(wm) ≈ 0.0726879353421
     @test calc_inductance(wm) ≈ 0.00297729832558
-    @test (wm.omega_sn / (wm.gear_ratio/wm.drum_radius)) ≈ 4.09167107705
+    @test (wm.omega_sn / (wm.set.gear_ratio/wm.set.drum_radius)) ≈ 4.09167107705
     @test calc_acceleration(wm, 8, 0; set_speed=7.9) ≈ -3.13208622374
     @test calc_acceleration(wm, 7.9, 8, 0) ≈ -3.13208622374
     @test calc_force(wm, 4.0*1.025, 4.0) ≈ 4015.21454473
