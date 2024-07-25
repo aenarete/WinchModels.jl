@@ -61,17 +61,17 @@ function calc_viscous_friction(wm::TorqueControlledMachine, omega)
 end
 
 function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
-    if use_brake
-        # if abs(set_speed) < 0.9 * wm.v_min
-        #     wm.brake = true
-        # elseif abs(set_speed) > 1.1 * wm.v_min
-        #     wm.brake = false
-        # end
-        # if wm.brake
-        #     # if the brake is active the acceleration proportional to the speed
-        #     # TODO: check if this is physically correct
-        #     return wm.brake_acc * speed
-        # end
+    if use_brake && ! isnothing(set_speed)
+        if abs(set_speed) < 0.9 * wm.v_min
+            wm.brake = true
+        elseif abs(set_speed) > 1.1 * wm.v_min
+            wm.brake = false
+        end
+        if wm.brake
+            # if the brake is active the acceleration proportional to the speed
+            # TODO: check if this is physically correct
+            return wm.brake_acc * speed
+        end
     end
     # limit the acceleration
     if ! isnothing(set_speed)
