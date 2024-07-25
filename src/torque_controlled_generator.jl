@@ -40,6 +40,10 @@ struct TorqueControlledMachine <: AbstractWinchModel
     brake::Bool = true;
 end
 
+function TorqueControlledMachine(set::Settings)
+    TorqueControlledMachine(set=set)
+end
+
 # calculated the motor reactance X [Ohm]
 function calc_reactance(wm::TorqueControlledMachine)
     wm.u_nom^2 / (2 * wm.omega_sn * wm.tau_b) 
