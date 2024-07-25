@@ -32,6 +32,12 @@ Model of a winch with an torqrue controlled generator and a gearbox.
 """
 struct TorqueControlledMachine <: AbstractWinchModel
     set::Settings
+    "minimal speed of the winch in m/s. If v_set is lower the brake is activated."
+    v_min = 0.2
+    "linear acceleration of the brake [m/s²]"
+    brake_acc = -25.0
+    "if the brake of the winch is activated"
+    brake::Bool = true;
 end
 
 # calculated the motor reactance X [Ohm]
