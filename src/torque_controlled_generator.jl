@@ -30,7 +30,7 @@ of drum and motor are combined into one value (stiff coupling). =#
 
 Model of a winch with an torqrue controlled generator and a gearbox.
 """
-struct TorqueControlledMachine <: AbstractWinchModel
+@with_kw mutable struct TorqueControlledMachine <: AbstractWinchModel @deftype Float64
     set::Settings
     "minimal speed of the winch in m/s. If v_set is lower the brake is activated."
     v_min = 0.2
