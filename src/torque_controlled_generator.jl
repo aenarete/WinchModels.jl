@@ -32,10 +32,6 @@ Model of a winch with an torqrue controlled generator and a gearbox.
 """
 struct TorqueControlledMachine <: AbstractWinchModel
     set::Settings
-    # "inertia of the motor, as seen from the motor [kgm²]"
-    # inertia_motor = 0.082
-    # " Inertia of the motor, gearbox and drum, as seen from the motor [kgm²]"
-    # inertia_total = 0.204
 end
 
 # calculated the motor reactance X [Ohm]
