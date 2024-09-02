@@ -87,7 +87,7 @@ function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque
     K = 1.0
     tau = set_torque * K
     # calculate tau_total based on the friction
-    tau_total = tau + wm.set.drum_radius / wm.set.gear_ratio * force * 4000.0 / wm.set.max_force - τ
+    tau_total = tau + wm.set.drum_radius / wm.set.gear_ratio * force  - τ
     # calculate omega_dot_m based on tau_total and the inertia
     omega_dot_m = tau_total/wm.set.inertia_total
     wm.set.drum_radius/wm.set.gear_ratio * omega_dot_m
