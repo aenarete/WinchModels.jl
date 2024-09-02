@@ -3,7 +3,9 @@ using Pkg
 if ! ("ControlPlots" ∈ keys(Pkg.project().dependencies))
     using TestEnv; TestEnv.activate()
 end
-using ControlPlots, WinchModels
+using ControlPlots, WinchModels, KiteUtils
+
+set::Settings = deepcopy(load_settings("system.yaml"))
 
 v_ro =     3.0 # m/s
 β =       26.0 # degrees
@@ -40,7 +42,7 @@ function simulate(t_sim=120; f_0=7663, speed_0=3.1735, dt=0.005)
     V_RO = Float64[]
     f = f_0
     v_ro = speed_0
-    wm=AsyncMachine()
+    wm = AsyncMachine(set)
     for t in time
         # calculate the set_speed using a ramp
         # calculate the acceleration
