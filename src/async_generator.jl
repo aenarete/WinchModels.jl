@@ -48,6 +48,8 @@ Model of a winch with an async generator and a gearbox.
     brake_acc = -25.0
     "if the brake of the winch is activated"
     brake::Bool = true;
+    "last set speed"
+    last_set_speed = 0.0;
 end
 
 function AsyncMachine(set::Settings)
@@ -90,6 +92,7 @@ function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake 
     calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed, use_brake)
 end
 function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
+    dt = 1/wm.set.sample_freq
     if use_brake
         if abs(set_speed) < 0.9 * wm.v_min
             wm.brake = true
@@ -102,14 +105,17 @@ function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, s
             return wm.brake_acc * speed
         end
     end
-    # limit the acceleration
-    if set_speed > speed + 1  
-        set_speed = speed + 1
-    elseif set_speed < speed - 1
-        set_speed = speed - 1
+    # # limit the acceleration
+    MAX_ACC = 4.0
+    limited_speed = set_speed
+    if set_speed > wm.last_set_speed + MAX_ACC*dt  
+        limited_speed = wm.last_set_speed + MAX_ACC*dt
+    elseif set_speed < wm.last_set_speed - MAX_ACC*dt
+        limited_speed = wm.last_set_speed - MAX_ACC*dt
     end
+    wm.last_set_speed = limited_speed
     omega      = wm.set.gear_ratio/wm.set.drum_radius * speed
-    omega_sync = wm.set.gear_ratio/wm.set.drum_radius * set_speed
+    omega_sync = wm.set.gear_ratio/wm.set.drum_radius * limited_speed
     delta = omega_sync - omega
     R2 = calc_resistance(wm)
     L  = calc_inductance(wm)
