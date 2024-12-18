@@ -6,6 +6,7 @@
 This package shall implement different models of ground stations for airborne
 wind energy systems. A ground station has the following components:
 - motor/generator
+- brake (optional)
 - gearbox (optional)
 - drum
 
