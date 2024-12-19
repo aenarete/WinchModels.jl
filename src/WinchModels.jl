@@ -40,5 +40,6 @@ const AWM = AbstractWinchModel
 
 include("async_generator.jl")
 include("torque_controlled_generator.jl")
+include("winch_controller.jl")
 
 end
