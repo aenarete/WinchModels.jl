@@ -32,6 +32,8 @@ Model of a winch with an torque controlled generator and a gearbox.
 """
 @with_kw mutable struct TorqueControlledMachine <: AbstractWinchModel @deftype Float64
     set::Settings
+    "winch speed controller"
+    wcs::WinchSpeedController
     "minimal speed of the winch in m/s. If v_set is lower the brake is activated."
     v_min = 0.2
     "linear acceleration of the brake [m/s²]"
@@ -43,7 +45,8 @@ Model of a winch with an torque controlled generator and a gearbox.
 end
 
 function TorqueControlledMachine(set::Settings)
-    TorqueControlledMachine(set=set)
+    wcs = WinchSpeedController(;kp=set.p_speed, ki=set.i_speed, dt=1/set.sample_freq)
+    TorqueControlledMachine(set=set, wcs=wcs)
 end
 
 # calculated the motor reactance X [Ohm]

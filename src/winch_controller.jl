@@ -1,5 +1,5 @@
 using DiscretePIDs
-# low level winch controller; this code will be moved to WinchControllers.jl in the future
+# low level winch speed controller
 
 mutable struct WinchSpeedController
     kp::Float64
