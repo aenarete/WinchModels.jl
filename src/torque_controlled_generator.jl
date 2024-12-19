@@ -28,7 +28,7 @@ of drum and motor are combined into one value (stiff coupling). =#
 """
     mutable struct TorqueControlledMachine
 
-Model of a winch with an torqrue controlled generator and a gearbox.
+Model of a winch with an torque controlled generator and a gearbox.
 """
 @with_kw mutable struct TorqueControlledMachine <: AbstractWinchModel @deftype Float64
     set::Settings
@@ -38,6 +38,8 @@ Model of a winch with an torqrue controlled generator and a gearbox.
     brake_acc = -25.0
     "if the brake of the winch is activated"
     brake::Bool = true;
+    "last set speed"
+    last_set_speed = 0.0;
 end
 
 function TorqueControlledMachine(set::Settings)
@@ -61,6 +63,7 @@ function calc_viscous_friction(wm::TorqueControlledMachine, omega)
 end
 
 function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
+    dt = 1/wm.set.sample_freq
     if use_brake && ! isnothing(set_speed)
         if abs(set_speed) < 0.9 * wm.v_min
             wm.brake = true
@@ -73,13 +76,17 @@ function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque
             return wm.brake_acc * speed
         end
     end
-    # limit the acceleration
-    if ! isnothing(set_speed)
-        if set_speed > speed + 1  
-            set_speed = speed + 1
-        elseif set_speed < speed - 1
-            set_speed = speed - 1
+    if !isnothing(set_speed)
+        # limit the acceleration
+        MAX_ACC = wm.set.max_acc
+        limited_speed = set_speed
+        if set_speed > wm.last_set_speed + MAX_ACC*dt  
+            limited_speed = wm.last_set_speed + MAX_ACC*dt
+        elseif set_speed < wm.last_set_speed - MAX_ACC*dt
+            limited_speed = wm.last_set_speed - MAX_ACC*dt
         end
+        # calculate set_torque based on the limited speed
+
     end
     omega      = wm.set.gear_ratio/wm.set.drum_radius * speed
     τ = calc_coulomb_friction(wm) * smooth_sign(omega) + calc_viscous_friction(wm, omega)
