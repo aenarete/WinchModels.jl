@@ -106,7 +106,7 @@ function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, s
         end
     end
     # # limit the acceleration
-    MAX_ACC = 4.0
+    MAX_ACC = wm.set.max_acc
     limited_speed = set_speed
     if set_speed > wm.last_set_speed + MAX_ACC*dt  
         limited_speed = wm.last_set_speed + MAX_ACC*dt
