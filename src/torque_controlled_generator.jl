@@ -90,6 +90,7 @@ function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque
         end
         # calculate set_torque based on the limited speed
         set_torque = calc_set_torque(wm.set, wm.wcs, limited_speed, speed, force)
+        wm.last_set_speed = limited_speed
     end
     omega      = wm.set.gear_ratio/wm.set.drum_radius * speed
     τ = calc_coulomb_friction(wm) * smooth_sign(omega) + calc_viscous_friction(wm, omega)
