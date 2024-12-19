@@ -11,7 +11,10 @@ wind energy systems. A ground station has the following components:
 - drum
 
 Currently implemented is a model of the 20kW ground station from Delft University of Technology.
-In addition, a generic, torque controlled winch without brake is implemented.
+In addition, a generic, torque controlled winch without brake is implemented. The torque controlled winch can
+operate both with a set_torque or with a set_speed. If a set_speed is provided, then a PI controller for is used
+that compares the actual speed and the set speed and controls the torque. The async generator cannot be used
+with a set_torque, only with a set_speed which is equal to the synchronous speed of the motor/ generator. 
 
 ## Mathematical background
 [Torque controlled winch](docs/winch.md).  
