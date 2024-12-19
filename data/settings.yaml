@@ -112,8 +112,8 @@ winch:
     inertia_total: 0.204   # total inertia, as seen from the motor/generator [kgm²]
     f_coulomb: 122.0       # coulomb friction                                [N]
     c_vf: 30.6             # coefficient for the viscous friction            [Ns/m]
-    p_speed: 20.0          # proportional gain of the winch speed controller [-]
-    i_speed:  5.0          # integral gain of the winch speed controller     [-]
+    p_speed: 20000.0       # proportional gain of the winch speed controller [-]
+    i_speed:  5000.0       # integral gain of the winch speed controller     [-]
 
 environment:
     v_wind: 9.51             # wind speed at reference height          [m/s]
