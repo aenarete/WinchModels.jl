@@ -1,4 +1,8 @@
 # Changelog
+### WinchModels v0.3.8 - 2025-26-08
+#### Added
+- Add KiteUtils v0.11 compat
+
 ### WinchModels v0.3.7 - 2025-09-04
 #### Changed
 - Update KiteUtils to v0.10
