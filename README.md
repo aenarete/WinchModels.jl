@@ -8,7 +8,7 @@ wind energy systems. A ground station has the following components:
 - motor/generator
 - brake (optional)
 - gearbox (optional)
-- drum
+- drum 
 
 Currently implemented is a model of the 20kW ground station from Delft University of Technology.
 In addition, a generic, torque controlled winch without brake is implemented. The torque controlled winch can
