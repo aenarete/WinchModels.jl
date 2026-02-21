@@ -66,7 +66,7 @@ wm = AsyncMachine(set)
 ```
 On i7-7700K 17ns for Julia, 1050ns with Python.
 
-## Licence
+## License
 This project is licensed under the MIT License. Please see the below WAIVER in association with the license.
 
 ## WAIVER
@@ -75,11 +75,13 @@ Technische Universiteit Delft hereby disclaims all copyright interest in the pac
 Prof.dr. H.G.C. (Henri) Werij, Dean of Aerospace Engineering
 
 ## See also
-- [Research Fechner](https://research.tudelft.nl/en/publications/?search=Uwe+Fecner&pageSize=50&ordering=rating&descending=true)
-- The application [KiteViewer](https://github.com/ufechner7/KiteViewer)
-- the package [KiteUtils](https://github.com/ufechner7/KiteUtils.jl)
-- the packages [KiteModels](https://github.com/ufechner7/KiteModels.jl) and [KitePodModels](https://github.com/aenarete/KitePodModels.jl) and [AtmosphericModels](https://github.com/aenarete/AtmosphericModels.jl)
-- the package [KiteControllers](https://github.com/aenarete/KiteControllers.jl) and [KiteViewers](https://github.com/aenarete/KiteViewers.jl)
+
+- [Research Fechner](https://research.tudelft.nl/en/publications/?search=Fechner+wind&pageSize=50&ordering=rating&descending=true) for the scientific background of this code
+- The meta-package [KiteSimulators](https://github.com/aenarete/KiteSimulators.jl)
+- the package [KiteUtils](https://github.com/OpenSourceAWE/KiteUtils.jl)
+- the packages [KiteModels](https://github.com/OpenSourceAWE/KiteModels.jl) and [KitePodModels](https://github.com/aenarete/KitePodModels.jl) and [AtmosphericModels](https://github.com/OpenSourceAWE/AtmosphericModels.jl)
+- the packages [WinchControllers](https://github.com/OpenSourceAWE/WinchControllers.jl), [KiteControllers](https://github.com/aenarete/KiteControllers.jl) and [KiteViewers](https://github.com/OpenSourceAWE/KiteViewers.jl)
+- the [VortexStepMethod](https://github.com/OpenSourceAWE/VortexStepMethod.jl)
 
 
 
