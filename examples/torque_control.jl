@@ -1,7 +1,7 @@
 # example of using a torque controlled winch model
 using Pkg
 if ! ("ControlPlots" ∈ keys(Pkg.project().dependencies))
-    using TestEnv; TestEnv.activate()
+    Pkg.activate(@__DIR__)
 end
 using ControlPlots, WinchModels
 

@@ -1,7 +1,7 @@
 # Example of using speed control with an AsyncMachine
 using Pkg
 if ! ("ControlPlots" ∈ keys(Pkg.project().dependencies))
-    using TestEnv; TestEnv.activate()
+    Pkg.activate(@__DIR__)
 end
 using ControlPlots, WinchModels, KiteUtils
 

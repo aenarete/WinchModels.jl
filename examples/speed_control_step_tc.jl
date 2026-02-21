@@ -1,12 +1,12 @@
 # Example of using speed control with a step input for the set_speed using the TorqueControlledMachine
 using Pkg
 if ! ("ControlPlots" ∈ keys(Pkg.project().dependencies))
-    using TestEnv; TestEnv.activate()
+    Pkg.activate(@__DIR__)
 end
 using ControlPlots, WinchModels, KiteUtils
 
 set::Settings = deepcopy(load_settings("system.yaml"))
-set.sample_freq = 200.0
+set.sample_freq = 200
 set.winch_model = "TorqueControlledMachine"
 
 v_ro =     3.0 # m/s
