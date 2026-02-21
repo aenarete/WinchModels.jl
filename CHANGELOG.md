@@ -1,4 +1,15 @@
-# Changelog
+## Changelog
+
+### WinchModels v0.3.9 - 2026-02-21
+#### Added
+- separate Project.toml files for `examples` and `test` folders
+- the file `.markdownlint.json`
+
+#### Changed
+- not using `TestEnv` any longer
+- make the examples work with the latest version of KiteUtils
+- now tested also with Julia 1.12
+
 ### WinchModels v0.3.8 - 2025-26-08
 #### Added
 - Add KiteUtils v0.11 compat
