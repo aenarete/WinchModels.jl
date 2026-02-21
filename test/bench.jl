@@ -1,11 +1,11 @@
 using Pkg
 if ! ("BenchmarkTools" ∈ keys(Pkg.project().dependencies))
-    using TestEnv; TestEnv.activate()
+    Pkg.activate(@__DIR__)
 end
 
-using WinchModels, BenchmarkTools
+using WinchModels, BenchmarkTools, KiteUtils
 
-wm = deepcopy(AsyncGenerator())
+wm = AsyncMachine(se())
 @benchmark calc_acceleration(wm, 7.9, 8., 100.0)
 
 # mean time:          17 ns

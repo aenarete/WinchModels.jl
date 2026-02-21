@@ -1,11 +1,11 @@
 using Pkg
 if ! ("Plots" ∈ keys(Pkg.project().dependencies))
-    using TestEnv; TestEnv.activate()
+    Pkg.activate(@__DIR__)
 end
 
-using Plots, WinchModels, LaTeXStrings
+using Plots, WinchModels, LaTeXStrings, KiteUtils
 
-wm = deepcopy(AsyncMachine())
+wm = AsyncMachine(se())
 wm.inertia_total=4*wm.inertia_motor
 n = 256
 x = range(0, 9.0, length=n)

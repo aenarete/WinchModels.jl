@@ -1,13 +1,14 @@
 using Pkg
 if ! ("Plots" ∈ keys(Pkg.project().dependencies))
-    using TestEnv; TestEnv.activate()
+    Pkg.activate(@__DIR__)
 end
 
-using Plots, WinchModels
+using ControlPlots, WinchModels, KiteUtils
 
-wm = deepcopy(AsyncMachine())
+wm = AsyncMachine(se())
 n = 256
-x = wm.gear_ratio/wm.drum_radius * range(-8.0, 8.0, length=n)
+x = wm.set.gear_ratio/wm.set.drum_radius * range(-8.0, 8.0, length=n)
 s = smooth_sign.(x)
-plot(x,s, legend=false)
-savefig("doc/smooth_sign.png")
+plt.plot(x,s)
+plt.grid()
+plt.savefig("docs/smooth_sign.png")
