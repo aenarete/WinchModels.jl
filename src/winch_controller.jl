@@ -1,10 +1,10 @@
 using DiscretePIDs
 # low level winch speed controller
 
-mutable struct WinchSpeedController
+mutable struct WinchSpeedController{T}
     kp::Float64
     ki::Float64
-    pid::DiscretePID
+    pid::DiscretePID{T}
 end
 function WinchSpeedController(;kp=20.0, ki=5.0, dt)
     pid = DiscretePID(;K=kp, Ti=kp/ki, Ts=dt)
@@ -29,5 +29,5 @@ function calc_set_torque(set::Settings, wcs::WinchSpeedController, v_set, v_reel
     # calculate the set torque
     r = set.drum_radius
     n = set.gear_ratio
-    set_torque = -r/n * (0.0*set_force-err)
+    return -r/n * (0.0*set_force-err)
 end
