@@ -49,11 +49,6 @@ function TorqueControlledMachine(set::Settings)
     TorqueControlledMachine(set=set, wcs=wcs)
 end
 
-# calculated the motor reactance X [Ohm]
-function calc_reactance(wm::TorqueControlledMachine)
-    wm.u_nom^2 / (2 * wm.omega_sn * wm.tau_b) 
-end
-
 # coulomb friction torque TAU_STATIC [Nm]
 function calc_coulomb_friction(wm::TorqueControlledMachine)
     wm.set.f_coulomb * wm.set.drum_radius / wm.set.gear_ratio
