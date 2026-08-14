@@ -4,6 +4,16 @@
 #### Changed
 - widen the `KiteUtils` compat bound to `"0.10, 0.11, 0.12"`; `Settings`, the only part of
   KiteUtils this package uses, is unchanged between 0.11 and 0.12
+- switched `examples/` and `test/` from `ControlPlots` to `MakieControlPlots`;
+  `test/plot_smooth_sign.jl` used raw PyPlot calls with no MakieControlPlots
+  equivalent and was rewritten around `plot`/`savefig`
+- widen the `Parameters` compat bound to `"0.12, 0.13"`; only `@with_kw`,
+  `@with_kw_noshow` and `@deftype` are used, verified against 0.13.1 by running
+  the test suite
+- CI now tests Julia 1.11 explicitly (alongside `1` and `nightly`), matching
+  what `bin/install` already required
+- dropped Julia 1.10 from the `julia` compat bound (now `"1.11, 1.12"`),
+  matching `bin/install`, which already rejected it
 
 ### WinchModels v0.3.9 - 2026-02-21
 #### Added
