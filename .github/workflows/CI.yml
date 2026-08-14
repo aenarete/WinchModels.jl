@@ -39,6 +39,20 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
+      # examples/ and test/ depend on MakieControlPlots, which pulls in GLMakie;
+      # a bare ubuntu-latest runner has neither the GL libraries nor a display,
+      # so precompiling GLMakie fails without these. Not needed on macOS/Windows
+      # runners, which have a usable display already.
+      - name: Install GL/Xvfb dependencies for GLMakie
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb libgl1 libgl1-mesa-dri libglfw3
+      - name: Start virtual framebuffer
+        if: runner.os == 'Linux'
+        run: |
+          Xvfb :99 -screen 0 1024x768x24 &
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
       - uses: actions/cache@v4
         env:
           cache-name: cache-artifacts
