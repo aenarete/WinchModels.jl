@@ -1,9 +1,9 @@
 # Example of using speed control with an AsyncMachine
 using Pkg
-if ! ("ControlPlots" ∈ keys(Pkg.project().dependencies))
+if ! ("MakieControlPlots" ∈ keys(Pkg.project().dependencies))
     Pkg.activate(@__DIR__)
 end
-using ControlPlots, WinchModels, KiteUtils
+using MakieControlPlots, WinchModels, KiteUtils
 
 set::Settings = deepcopy(load_settings("system.yaml"))
 

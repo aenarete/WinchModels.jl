@@ -1,7 +1,7 @@
 using WinchModels, KiteUtils
 using Test
 
-cd("..")
+if basename(pwd()) == "test"; cd(".."); end
 KiteUtils.set_data_path("") 
 set = se()
 

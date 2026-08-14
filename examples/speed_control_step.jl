@@ -1,9 +1,9 @@
 # Example of using speed control with a step input for the set_speed
 using Pkg
-if ! ("ControlPlots" ∈ keys(Pkg.project().dependencies))
+if ! ("MakieControlPlots" ∈ keys(Pkg.project().dependencies))
     Pkg.activate(@__DIR__)
 end
-using ControlPlots, WinchModels, KiteUtils
+using MakieControlPlots, WinchModels, KiteUtils
 
 set::Settings = deepcopy(load_settings("system.yaml"))
 set.sample_freq = 200

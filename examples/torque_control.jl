@@ -1,9 +1,9 @@
 # example of using a torque controlled winch model
 using Pkg
-if ! ("ControlPlots" ∈ keys(Pkg.project().dependencies))
+if ! ("MakieControlPlots" ∈ keys(Pkg.project().dependencies))
     Pkg.activate(@__DIR__)
 end
-using ControlPlots, WinchModels
+using MakieControlPlots, WinchModels
 
 v_ro =     3.0 # m/s
 β =       26.0 # degrees

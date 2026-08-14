@@ -1,5 +1,10 @@
 ## Changelog
 
+### WinchModels v0.3.10 - 2026-08-14
+#### Changed
+- widen the `KiteUtils` compat bound to `"0.10, 0.11, 0.12"`; `Settings`, the only part of
+  KiteUtils this package uses, is unchanged between 0.11 and 0.12
+
 ### WinchModels v0.3.9 - 2026-02-21
 #### Added
 - separate Project.toml files for `examples` and `test` folders
