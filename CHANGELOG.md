@@ -10,10 +10,15 @@
 - widen the `Parameters` compat bound to `"0.12, 0.13"`; only `@with_kw`,
   `@with_kw_noshow` and `@deftype` are used, verified against 0.13.1 by running
   the test suite
-- CI now tests Julia 1.11 explicitly (alongside `1` and `nightly`), matching
-  what `bin/install` already required
+- CI now tests Julia 1.11 explicitly (alongside `1` and `pre`), matching what
+  `bin/install` already required; `pre` (the latest release candidate) replaces
+  `nightly`, which is noisier and more prone to unrelated breakage
 - dropped Julia 1.10 from the `julia` compat bound (now `"1.11, 1.12"`),
   matching `bin/install`, which already rejected it
+- CI installs `xvfb`/`libgl1`/`libgl1-mesa-dri`/`libglfw3` and starts a virtual
+  framebuffer on Linux runners before building/testing; a bare `ubuntu-latest`
+  runner has neither the GL libraries nor a display, so precompiling GLMakie
+  (pulled in by MakieControlPlots) failed without them
 
 ### WinchModels v0.3.9 - 2026-02-21
 #### Added
