@@ -1,5 +1,10 @@
 ## Changelog
 
+### Unreleased
+#### Changed
+- widen the `KiteUtils` compat bound to `"0.10, 0.11, 0.12, 0.13"`; `Settings` is unchanged in
+  0.13, verified by running the test suite against 0.13.0
+
 ### WinchModels v0.3.10 - 2026-08-14
 #### Changed
 - widen the `KiteUtils` compat bound to `"0.10, 0.11, 0.12"`; `Settings`, the only part of
