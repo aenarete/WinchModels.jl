@@ -4,6 +4,9 @@
 #### Changed
 - widen the `KiteUtils` compat bound to `"0.10, 0.11, 0.12, 0.13"`; `Settings` is unchanged in
   0.13, verified by running the test suite against 0.13.0
+- support Julia 1.12 and 1.13 only, as KiteUtils does: `julia` compat `"1.12, 1.13"`, CI
+  tests exactly those two, `bin/install` accepts them, and `Manifest-v1.13.toml.default`
+  replaces `Manifest-v1.11.toml.default`
 
 ### WinchModels v0.3.10 - 2026-08-14
 #### Changed

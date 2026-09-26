@@ -20,7 +20,7 @@ with a set_torque, only with a set_speed which is equal to the synchronous speed
 [Torque controlled winch](docs/winch.md).  
 
 ## Installation
-First, install Julia 1.10 or higher. Then launch Julia and install this package using the package manager.
+First, install Julia 1.12 or 1.13. Then launch Julia and install this package using the package manager.
 ```julia
 using Pkg
 pkg"add WinchModels"

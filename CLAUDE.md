@@ -23,7 +23,7 @@ pending a fix) recovers the tether force from that. The math is in `docs/winch.m
 
 ```bash
 bin/install       # copies the matching Manifest-vX.Y.toml.default, instantiates root +
-                   # examples/ + test/; only accepts Julia 1.11/1.12 (rejects 1.10, unlike CI.yml's matrix, see below)
+                   # examples/ + test/; only accepts Julia 1.12/1.13, as CI.yml and `julia` compat
 bin/run_julia     # LANG=en_US julia --project "$@" from the repo root; no menu(), unlike
                    # WinchControllers.jl/SimpleKiteControllers.jl's bin/run_julia
 bin/release [-y]  # cut a release: Project.toml version must match the top CHANGELOG.md
@@ -107,20 +107,16 @@ disp=true)` + `savefig(...)`, not a like-for-like API swap.
   KiteUtils' PI gains, not this repo's. The preceding `cd("..")` doesn't affect this
   resolution either (it's independent of `pwd()`); whether it's still doing anything useful
   for something else in the test file is not obvious — check before removing it.
-- **`bin/install` rejects Julia 1.10** ("Only Julia 1.11 and 1.12 are supported"); `CI.yml`'s
-  matrix agrees now (`'1'`/`'nightly'` only), but `Project.toml`'s own `julia = "1.10, 1.11,
-  1.12"` compat bound still claims 1.10 support — that one is unchanged, so don't assume it
-  matches what's actually tested.
-- **Never use a bare `Manifest.toml`; use `Manifest-v1.11.toml` / `Manifest-v1.12.toml`.**
+- **Never use a bare `Manifest.toml`; use `Manifest-v1.12.toml` / `Manifest-v1.13.toml`.**
   This repo's per-Julia-minor-version manifests (the pattern `bin/install` relies on, copying
   the matching `Manifest-vX.Y.toml.default`) only work if there is no plain `Manifest.toml`
   sitting alongside them — its presence makes Pkg prefer it over the version-specific one,
-  silently defeating the whole point of keeping 1.11 and 1.12 resolved separately. If one
+  silently defeating the whole point of keeping 1.12 and 1.13 resolved separately. If one
   ever reappears (e.g. from a bare `Pkg.instantiate()`/`Pkg.resolve()` run without
   `--project` pointed correctly, or a manual `Pkg.add`), rename it to the version-specific
   name for whichever Julia produced it (check its `julia_version` field) rather than leaving
   it in place, or delete it if a `Manifest-vX.Y.toml` for that version already exists. All
-  three (`Manifest.toml`, `Manifest-v1.11.toml`, `Manifest-v1.12.toml`) are gitignored, so
+  three (`Manifest.toml`, `Manifest-v1.12.toml`, `Manifest-v1.13.toml`) are gitignored, so
   this is a local-workspace hygiene issue, not a git one.
 - **`TorqueControlledMachine.calc_force` is commented out** (`torque_controlled_generator.jl`,
   end of file), with a `# TODO: fix the calculation of the force` on the abandoned attempt.
