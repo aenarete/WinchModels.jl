@@ -87,6 +87,43 @@ end
         @test wm.last_set_speed ≈ -step
     end
 
+    @testset "update_winch_state! updates the brake and the set speed once per time step" begin
+        for Machine in (AsyncMachine, TorqueControlledMachine)
+            wm = Machine(Settings("system.yaml"))
+            step = wm.set.max_acc / wm.set.sample_freq
+            # brake on: the set speed is kept
+            update_winch_state!(wm, 0.5wm.v_min; use_brake=true)
+            @test wm.brake
+            @test wm.last_set_speed == 0.0
+            @test calc_acceleration(wm, 0.5, 0.0; set_speed=10.0, use_brake=true,
+                                    update_state=false) ≈ wm.brake_acc * 0.5
+            @test wm.brake
+            # brake off: the set speed is rate limited
+            update_winch_state!(wm, 10.0; use_brake=true)
+            @test !wm.brake
+            @test wm.last_set_speed ≈ step
+            # calc_acceleration with update_state=false changes neither the brake state nor
+            # the set speed; for the AsyncMachine it does not depend on the number of calls
+            # (the speed controller of the TorqueControlledMachine still has its own state)
+            acc = calc_acceleration(wm, 0.0, 0.0; set_speed=10.0, use_brake=true, update_state=false)
+            for i in 1:10
+                acc_i = calc_acceleration(wm, 0.0, 0.0; set_speed=10.0, use_brake=true, update_state=false)
+                wm isa AsyncMachine && @test acc_i == acc
+            end
+            @test wm.last_set_speed ≈ step
+            acc_0 = calc_acceleration(wm, 0.0, 0.0; set_speed=0.0, use_brake=true, update_state=false)
+            wm isa AsyncMachine && @test acc_0 == acc
+            @test !wm.brake
+            if wm isa AsyncMachine
+                # the positional method accepts update_state as well
+                @test calc_acceleration(wm, 10.0, 0.0, 0.0, true; update_state=false) == acc
+                @test wm.last_set_speed ≈ step
+            end
+            update_winch_state!(wm, nothing)
+            @test wm.last_set_speed ≈ step
+        end
+    end
+
     @testset "AsyncMachine drive torque falls with 1/omega² above synchronous speed" begin
         wm = AsyncMachine(Settings("system.yaml"))
         gear = wm.set.gear_ratio / wm.set.drum_radius

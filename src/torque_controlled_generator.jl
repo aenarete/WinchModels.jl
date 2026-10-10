@@ -60,15 +60,11 @@ function calc_viscous_friction(wm::TorqueControlledMachine, omega)
     wm.set.c_vf * omega * wm.set.drum_radius^2 / wm.set.gear_ratio^2     
 end
 
-function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
-    dt = 1/wm.set.sample_freq
+function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false,
+                           update_state = true)
     if use_brake && ! isnothing(set_speed)
-        if abs(set_speed) < 0.9 * wm.v_min
-            wm.brake = true
-        elseif abs(set_speed) > 1.1 * wm.v_min
-            wm.brake = false
-        end
-        if wm.brake
+        brake = update_state ? update_brake!(wm, set_speed) : wm.brake
+        if brake
             # if the brake is active the acceleration proportional to the speed
             # TODO: check if this is physically correct
             return wm.brake_acc * speed
@@ -76,16 +72,14 @@ function calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque
     end
     if !isnothing(set_speed)
         # limit the acceleration
-        MAX_ACC = wm.set.max_acc
-        limited_speed = set_speed
-        if set_speed > wm.last_set_speed + MAX_ACC*dt  
-            limited_speed = wm.last_set_speed + MAX_ACC*dt
-        elseif set_speed < wm.last_set_speed - MAX_ACC*dt
-            limited_speed = wm.last_set_speed - MAX_ACC*dt
+        if update_state
+            limited_speed = limit_set_speed(wm, set_speed)
+            wm.last_set_speed = limited_speed
+        else
+            limited_speed = wm.last_set_speed
         end
         # calculate set_torque based on the limited speed
         set_torque = calc_set_torque(wm.set, wm.wcs, limited_speed, speed, force)
-        wm.last_set_speed = limited_speed
     end
     omega      = wm.set.gear_ratio/wm.set.drum_radius * speed
     τ = calc_coulomb_friction(wm) * smooth_sign(omega) + calc_viscous_friction(wm, omega)

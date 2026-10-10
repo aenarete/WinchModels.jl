@@ -88,32 +88,26 @@ function smooth_sign(x)
     x / sqrt(x * x + EPSILON * EPSILON)
 end
 
-function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false)
-    calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed, use_brake)
+function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false; update_state = true)
+    calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed, use_brake, update_state)
 end
-function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
-    dt = 1/wm.set.sample_freq
+function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false,
+                           update_state = true)
     if use_brake
-        if abs(set_speed) < 0.9 * wm.v_min
-            wm.brake = true
-        elseif abs(set_speed) > 1.1 * wm.v_min
-            wm.brake = false
-        end
-        if wm.brake
+        brake = update_state ? update_brake!(wm, set_speed) : wm.brake
+        if brake
             # if the brake is active the acceleration proportional to the speed
             # TODO: check if this is physically correct
             return wm.brake_acc * speed
         end
     end
-    # # limit the acceleration
-    MAX_ACC = wm.set.max_acc
-    limited_speed = set_speed
-    if set_speed > wm.last_set_speed + MAX_ACC*dt  
-        limited_speed = wm.last_set_speed + MAX_ACC*dt
-    elseif set_speed < wm.last_set_speed - MAX_ACC*dt
-        limited_speed = wm.last_set_speed - MAX_ACC*dt
+    # limit the acceleration
+    if update_state
+        limited_speed = limit_set_speed(wm, set_speed)
+        wm.last_set_speed = limited_speed
+    else
+        limited_speed = wm.last_set_speed
     end
-    wm.last_set_speed = limited_speed
     omega      = wm.set.gear_ratio/wm.set.drum_radius * speed
     omega_sync = wm.set.gear_ratio/wm.set.drum_radius * limited_speed
     delta = omega_sync - omega
