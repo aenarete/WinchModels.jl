@@ -88,8 +88,8 @@ function smooth_sign(x)
     x / sqrt(x * x + EPSILON * EPSILON)
 end
 
-function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false)
-    calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed, use_brake)
+function calc_acceleration(wm::AsyncMachine, set_speed, speed, force, use_brake = false; update_state = true)
+    calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed, use_brake, update_state)
 end
 function calc_acceleration(wm::AsyncMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false,
                            update_state = true)

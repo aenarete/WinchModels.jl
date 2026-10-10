@@ -114,6 +114,11 @@ end
             acc_0 = calc_acceleration(wm, 0.0, 0.0; set_speed=0.0, use_brake=true, update_state=false)
             wm isa AsyncMachine && @test acc_0 == acc
             @test !wm.brake
+            if wm isa AsyncMachine
+                # the positional method accepts update_state as well
+                @test calc_acceleration(wm, 10.0, 0.0, 0.0, true; update_state=false) == acc
+                @test wm.last_set_speed ≈ step
+            end
             update_winch_state!(wm, nothing)
             @test wm.last_set_speed ≈ step
         end
