@@ -1,5 +1,16 @@
 ## Changelog
 
+### WinchModels v0.3.12 - unreleased
+#### Added
+- `update_winch_state!(wm, set_speed; use_brake=false)`, which updates the brake state and the rate
+  limited set speed once per time step, and the keyword argument `update_state=true` of
+  `calc_acceleration`; with `update_state=false`, `calc_acceleration` does not change the state of
+  the winch. Simulators that call `calc_acceleration` in the residual of a DAE solver should use
+  both: with `update_state=true` the brake state and the rate limit depend on the number of
+  residual evaluations of the solver, which made simulations sensitive to tiny numerical
+  differences (e.g. between Julia versions). The state of the speed controller of the
+  `TorqueControlledMachine` is still updated on every call
+
 ### WinchModels v0.3.11 - 2026-09-26
 #### Changed
 - widen the `KiteUtils` compat bound to `"0.10, 0.11, 0.12, 0.13"`; `Settings` is unchanged in

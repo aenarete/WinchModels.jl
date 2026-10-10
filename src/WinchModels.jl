@@ -27,7 +27,7 @@ export Settings
 export AbstractWinchModel, AsyncMachine, TorqueControlledMachine           # types
 export calc_reactance, calc_inductance, calc_resistance                    # helper functions
 export calc_coulomb_friction, calc_viscous_friction, smooth_sign           # helper functions
-export calc_acceleration, calc_force                                       # main functions
+export calc_acceleration, calc_force, update_winch_state!                  # main functions
 
 """
     abstract type AbstractWinchModel
@@ -37,6 +37,55 @@ with all winch models. All exported methods must work on this type.
 """
 abstract type AbstractWinchModel end
 const AWM = AbstractWinchModel
+
+"""
+    update_brake!(wm::AbstractWinchModel, set_speed)
+
+Switch the brake on if `abs(set_speed)` is below `0.9 * wm.v_min` and off if it is above
+`1.1 * wm.v_min`; in between it keeps its state (hysteresis). Returns `wm.brake`.
+"""
+function update_brake!(wm::AWM, set_speed)
+    if abs(set_speed) < 0.9 * wm.v_min
+        wm.brake = true
+    elseif abs(set_speed) > 1.1 * wm.v_min
+        wm.brake = false
+    end
+    wm.brake
+end
+
+"""
+    limit_set_speed(wm::AbstractWinchModel, set_speed)
+
+Return `set_speed`, limited such that it differs by at most `max_acc / sample_freq` from
+`wm.last_set_speed`.
+"""
+function limit_set_speed(wm::AWM, set_speed)
+    max_step = wm.set.max_acc / wm.set.sample_freq
+    clamp(set_speed, wm.last_set_speed - max_step, wm.last_set_speed + max_step)
+end
+
+"""
+    update_winch_state!(wm::AbstractWinchModel, set_speed; use_brake=false)
+
+Update the brake state and the rate limited set speed `wm.last_set_speed` of the winch for the
+next time step. Call it once per time step, before integrating, and call `calc_acceleration`
+with `update_state=false` during the time step, for example in the residual of a DAE solver.
+
+`calc_acceleration` with `update_state=true` (the default) updates the state on every call, so the
+state would depend on the number of calls of the residual function by the solver.
+
+Does nothing if `set_speed` is `nothing`. While the brake is active, `wm.last_set_speed` is kept.
+The state of the speed controller of the [`TorqueControlledMachine`](@ref) is still updated on
+every call of `calc_acceleration` with a `set_speed`.
+"""
+function update_winch_state!(wm::AWM, set_speed; use_brake=false)
+    isnothing(set_speed) && return nothing
+    if use_brake && update_brake!(wm, set_speed)
+        return nothing
+    end
+    wm.last_set_speed = limit_set_speed(wm, set_speed)
+    nothing
+end
 
 include("async_generator.jl")
 include("winch_controller.jl")
