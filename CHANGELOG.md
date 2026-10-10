@@ -10,6 +10,9 @@
   residual evaluations of the solver, which made simulations sensitive to tiny numerical
   differences (e.g. between Julia versions). The state of the speed controller of the
   `TorqueControlledMachine` is still updated on every call
+#### Changed
+- CI uses `actions/checkout@v7`, `julia-actions/setup-julia@v3` and `codecov/codecov-action@v7`;
+  the macOS job runs natively on `aarch64` (setup-julia v3 refuses `x64` on Apple Silicon runners)
 
 ### WinchModels v0.3.11 - 2026-09-26
 #### Changed
