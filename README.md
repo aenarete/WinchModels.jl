@@ -31,15 +31,27 @@ pkg"add WinchModels"
 AbstractWinchModel
 AsyncMachine
 TorqueControlledMachine
+MatlabMachine
 ```
 
 ## Main functions
 ```julia
 calc_acceleration(wm::AsyncMachine, speed, force;            set_torque=nothing, set_speed=nothing, use_brake = false)
 calc_acceleration(wm::TorqueControlledMachine, speed, force; set_torque=nothing, set_speed=nothing, use_brake = false)
+calc_acceleration(wm::MatlabMachine, speed, force;           set_torque=nothing, set_speed=nothing, use_brake = false)
 calc_force(wm::AsyncMachine, set_speed, speed)
+update_winch_state!(wm, set_speed; use_brake=false, speed=nothing, force=nothing)
 ```
 <p align="center"><img src="./docs/working_principle.png" width="800" /></p>
+
+### Winch model in Matlab
+The `MatlabMachine` is the model of the `AsyncMachine`, implemented in Matlab by the function
+`async_machine_step.m`, which must be on the Matlab path. It needs Matlab R2020b or newer and
+`using MATLAB` (package extension `WinchModelsMATLABExt`). Matlab is called once per time step, in
+`update_winch_state!`, which gets the reel-out speed and the tether force at the start of the step;
+within the time step, `calc_acceleration(...; update_state=false)` uses the linearization around
+that point. The Matlab function, examples and documentation are part of KiteControllers.jl, see
+[Winch Model in Matlab](https://opensourceawe.github.io/KiteControllers.jl/dev/matlab/).
 
 ### Plot of function "calc_force"
 <p align="center"><img src="./docs/tether_force.png" width="600" /></p>
