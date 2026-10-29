@@ -1,6 +1,6 @@
 ## Changelog
 
-### Unreleased
+### WinchModels v0.3.13 - 2026-10-29
 #### Added
 - `MatlabMachine`: the model of the `AsyncMachine`, implemented in Matlab (`async_machine_step.m`,
   which must be on the Matlab path) and called through the Matlab engine once per time step, in
