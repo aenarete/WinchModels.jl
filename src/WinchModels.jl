@@ -24,7 +24,7 @@ module WinchModels
 using KiteUtils, Parameters
 
 export Settings
-export AbstractWinchModel, AsyncMachine, TorqueControlledMachine           # types
+export AbstractWinchModel, AsyncMachine, MatlabMachine, TorqueControlledMachine # types
 export calc_reactance, calc_inductance, calc_resistance                    # helper functions
 export calc_coulomb_friction, calc_viscous_friction, smooth_sign           # helper functions
 export calc_acceleration, calc_force, update_winch_state!                  # main functions
@@ -65,7 +65,8 @@ function limit_set_speed(wm::AWM, set_speed)
 end
 
 """
-    update_winch_state!(wm::AbstractWinchModel, set_speed; use_brake=false)
+    update_winch_state!(wm::AbstractWinchModel, set_speed; use_brake=false, speed=nothing,
+                        force=nothing)
 
 Update the brake state and the rate limited set speed `wm.last_set_speed` of the winch for the
 next time step. Call it once per time step, before integrating, and call `calc_acceleration`
@@ -77,8 +78,11 @@ state would depend on the number of calls of the residual function by the solver
 Does nothing if `set_speed` is `nothing`. While the brake is active, `wm.last_set_speed` is kept.
 The state of the speed controller of the [`TorqueControlledMachine`](@ref) is still updated on
 every call of `calc_acceleration` with a `set_speed`.
+
+The keyword arguments `speed` and `force`, the reel-out speed and the tether force at the start
+of the time step, are only used by the [`MatlabMachine`](@ref); the other models ignore them.
 """
-function update_winch_state!(wm::AWM, set_speed; use_brake=false)
+function update_winch_state!(wm::AWM, set_speed; use_brake=false, speed=nothing, force=nothing)
     isnothing(set_speed) && return nothing
     if use_brake && update_brake!(wm, set_speed)
         return nothing
@@ -90,5 +94,6 @@ end
 include("async_generator.jl")
 include("winch_controller.jl")
 include("torque_controlled_generator.jl")
+include("matlab_machine.jl")
 
 end
