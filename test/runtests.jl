@@ -186,4 +186,34 @@ end
         torque = WinchModels.calc_set_torque(set, wcs, 2.0, 2.0, force)
         @test torque ≈ -set.drum_radius / set.gear_ratio * force
     end
+
+    @testset "MatlabMachine without Matlab" begin
+        mm = MatlabMachine(set)
+        am = AsyncMachine(set)
+        for field in (:u_nom, :omega_sn, :omega_mn, :tau_n, :tau_b, :v_min, :brake_acc, :brake,
+                      :last_set_speed)
+            @test getfield(mm, field) == getfield(am, field)
+        end
+        if isnothing(Base.get_extension(WinchModels, :WinchModelsMATLABExt))
+            @test_throws ErrorException update_winch_state!(mm, 1.0; speed=1.0, force=1000.0)
+        end
+        # the first order expansion around the point of the last Matlab call
+        mm.speed0, mm.force0 = 2.0, 1000.0
+        mm.acc0, mm.dacc_dv, mm.dacc_dF = 0.5, -3.0, 0.001
+        mm.brake = false
+        @test calc_acceleration(mm, 2.0, 1000.0; use_brake=true, update_state=false) ≈ 0.5
+        @test calc_acceleration(mm, 2.1, 1200.0; use_brake=true, update_state=false) ≈
+              0.5 - 3.0 * 0.1 + 0.001 * 200.0
+        mm.brake = true
+        @test calc_acceleration(mm, 2.0, 1000.0; use_brake=true, update_state=false) ≈
+              mm.brake_acc * 2.0
+        @test calc_acceleration(mm, 2.0, 1000.0; use_brake=false, update_state=false) ≈ 0.5
+    end
+
+    @testset "update_winch_state! ignores speed and force for the Julia models" begin
+        am = AsyncMachine(set)
+        am.brake = false
+        update_winch_state!(am, 1.0; use_brake=true, speed=0.5, force=1000.0)
+        @test am.last_set_speed ≈ am.set.max_acc / am.set.sample_freq
+    end
 end

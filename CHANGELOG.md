@@ -1,5 +1,16 @@
 ## Changelog
 
+### Unreleased
+#### Added
+- `MatlabMachine`: the model of the `AsyncMachine`, implemented in Matlab (`async_machine_step.m`,
+  which must be on the Matlab path) and called through the Matlab engine once per time step, in
+  `update_winch_state!`. Within the time step, `calc_acceleration` uses the first order expansion
+  around the reel-out speed and the tether force at the start of the step, so that the residual of
+  a DAE solver does not call Matlab. Needs `using MATLAB` (package extension
+  `WinchModelsMATLABExt`, weak dependency MATLAB.jl)
+- keyword arguments `speed` and `force` of `update_winch_state!`, used by the `MatlabMachine` and
+  ignored by the other models
+
 ### WinchModels v0.3.12 - 2026-10-10
 #### Added
 - `update_winch_state!(wm, set_speed; use_brake=false)`, which updates the brake state and the rate
