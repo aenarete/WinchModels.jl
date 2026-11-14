@@ -1,5 +1,9 @@
 ## Changelog
 
+### WinchModels v0.3.14 - 2026-11-14
+#### Changed
+- `[compat]` accepts KiteUtils 0.14
+
 ### WinchModels v0.3.13 - 2026-10-29
 #### Added
 - `MatlabMachine`: the model of the `AsyncMachine`, implemented in Matlab (`async_machine_step.m`,
